@@ -1,6 +1,6 @@
 {
   "name": "nc-bioinformatics-figure-skills",
-  "version": "0.1.0",
+  "version": "2.0.0",
   "description": "Nature Communications-first bioinformatics figure visualization skill library built from GitHub-code-backed omics papers.",
   "author": {
     "name": "Jiang Congxin"

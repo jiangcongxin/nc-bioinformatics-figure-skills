@@ -1,7 +1,7 @@
 ---
 name: nc-bioinformatics-figure-skills
 description: Build personal bioinformatics figure visualization skills from Nature Communications-first, GitHub-code-backed omics papers. Use when the user asks to learn NC/Nature Communications figure design, reproduce bioinformatics visualizations, inspect GitHub figure code, or turn paper figures into plotting skills/templates.
-version: "0.1.0"
+version: "2.0.0"
 allowed-tools: Read, Write, Edit, Grep, Glob, WebSearch, Bash
 ---
 

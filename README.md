@@ -10,7 +10,7 @@
 
 <p align="center">
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-111827.svg"></a>
-  <img alt="Version" src="https://img.shields.io/badge/version-0.1.0-2563eb.svg">
+  <img alt="Version" src="https://img.shields.io/badge/version-2.0.0-2563eb.svg">
   <img alt="Papers" src="https://img.shields.io/badge/papers-50-7c2d12.svg">
   <img alt="Language" src="https://img.shields.io/badge/language-ZH%20%7C%20EN-0f766e.svg">
 </p>
