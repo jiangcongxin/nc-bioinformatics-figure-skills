@@ -1,0 +1,43 @@
+{
+  "name": "nc-bioinformatics-figure-skills",
+  "version": "0.1.0",
+  "description": "Nature Communications-first bioinformatics figure visualization skill library built from GitHub-code-backed omics papers.",
+  "author": {
+    "name": "Jiang Congxin"
+  },
+  "homepage": "https://github.com/jiangcongxin/nc-bioinformatics-figure-skills",
+  "repository": "https://github.com/jiangcongxin/nc-bioinformatics-figure-skills",
+  "license": "MIT",
+  "keywords": [
+    "bioinformatics",
+    "Nature Communications",
+    "figure",
+    "visualization",
+    "single-cell",
+    "spatial transcriptomics",
+    "multiomics",
+    "plotting skills"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "NC 生信绘图 Skills",
+    "shortDescription": "从 NC 优先、GitHub 可复现论文学习生信 Figure 可视化。",
+    "longDescription": "A local Codex plugin that turns a 50-paper Nature Communications-first bioinformatics visualization library into reusable plotting skills, paper dissection workflows, figure planning templates, and R/Python plotting skeletons.",
+    "developerName": "Jiang Congxin",
+    "category": "Research",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write",
+      "WebSearch"
+    ],
+    "websiteURL": "https://github.com/jiangcongxin/nc-bioinformatics-figure-skills",
+    "privacyPolicyURL": "https://github.com/jiangcongxin/nc-bioinformatics-figure-skills",
+    "termsOfServiceURL": "https://github.com/jiangcongxin/nc-bioinformatics-figure-skills",
+    "defaultPrompt": [
+      "Use nc-bioinformatics-figure-skills when the user wants to learn Nature Communications bioinformatics figure visualization, inspect GitHub figure code, build plotting skill modules, or design manuscript figures from omics analysis results."
+    ],
+    "brandColor": "#2563EB",
+    "screenshots": []
+  }
+}
