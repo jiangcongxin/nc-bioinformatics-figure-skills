@@ -1,0 +1,9 @@
+group	cell_type	n	proportion
+Control	T cell	38	0.38
+Control	B cell	25	0.25
+Control	Myeloid	20	0.20
+Control	Stromal	17	0.17
+Disease	T cell	26	0.26
+Disease	B cell	18	0.18
+Disease	Myeloid	36	0.36
+Disease	Stromal	20	0.20

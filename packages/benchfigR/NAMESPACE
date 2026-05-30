@@ -1,0 +1,7 @@
+export(compose_benchmark_case_figure)
+export(plot_case_embedding_panel)
+export(plot_metric_heatmap_panel)
+export(plot_rank_panel)
+export(plot_robustness_panel)
+export(plot_runtime_panel)
+importFrom(rlang,.data)

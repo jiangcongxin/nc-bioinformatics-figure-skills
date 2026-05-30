@@ -1,0 +1,13 @@
+cell_id	x	y	cell_type	group	score
+C001	-2.1	0.2	T_cell	Control	0.10
+C002	-1.8	0.4	T_cell	Control	0.15
+C003	-2.0	-0.3	T_cell	Disease	0.30
+C004	0.1	1.8	B_cell	Control	0.25
+C005	0.3	2.1	B_cell	Disease	0.40
+C006	0.0	1.6	B_cell	Disease	0.35
+C007	2.2	-0.2	Myeloid	Control	0.45
+C008	2.0	0.1	Myeloid	Disease	0.70
+C009	2.4	-0.4	Myeloid	Disease	0.82
+C010	0.7	-2.0	Fibroblast	Control	0.20
+C011	1.0	-1.8	Fibroblast	Disease	0.55
+C012	0.5	-2.2	Fibroblast	Disease	0.50

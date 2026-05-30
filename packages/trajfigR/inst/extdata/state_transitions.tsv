@@ -1,0 +1,7 @@
+from_state	to_state	weight	transition_type
+Naive	Primed	0.92	main
+Primed	Bifurcation	0.84	main
+Bifurcation	Effector	0.63	branch_A
+Bifurcation	Regulatory	0.58	branch_B
+Effector	Regulatory	0.12	cross
+Regulatory	Effector	0.08	cross

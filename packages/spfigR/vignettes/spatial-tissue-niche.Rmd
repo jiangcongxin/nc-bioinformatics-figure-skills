@@ -1,0 +1,24 @@
+---
+title: "Spatial Tissue Niche With spfigR"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Spatial Tissue Niche With spfigR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, message=FALSE}
+library(spfigR)
+library(ncfigR)
+```
+
+```{r}
+coords <- readr::read_tsv(system.file("extdata/spatial_coordinates.tsv", package = "spfigR"), show_col_types = FALSE)
+features <- readr::read_tsv(system.file("extdata/spatial_features.tsv", package = "spfigR"), show_col_types = FALSE)
+composition <- readr::read_tsv(system.file("extdata/spatial_composition.tsv", package = "spfigR"), show_col_types = FALSE)
+regions <- readr::read_tsv(system.file("extdata/spatial_zoom_regions.tsv", package = "spfigR"), show_col_types = FALSE)
+palette <- read_nc_palette(system.file("extdata/domain_palette.tsv", package = "spfigR"))
+
+fig <- compose_spatial_niche_figure(coords, features, composition, regions, palette = palette)
+fig
+```

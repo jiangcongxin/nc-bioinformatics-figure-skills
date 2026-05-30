@@ -1,0 +1,6 @@
+export(compose_sc_atlas_figure)
+export(plot_cell_fraction_panel)
+export(plot_marker_dotplot_panel)
+export(plot_module_score_panel)
+export(plot_sc_embedding_panel)
+importFrom(rlang,.data)

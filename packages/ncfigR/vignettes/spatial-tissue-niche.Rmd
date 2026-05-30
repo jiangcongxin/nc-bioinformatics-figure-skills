@@ -1,0 +1,21 @@
+---
+title: "Spatial Tissue Niche"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Spatial Tissue Niche}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, eval=FALSE}
+library(ncfigR)
+embedding <- readr::read_tsv(system.file("extdata/embedding.tsv", package = "ncfigR"))
+composition <- readr::read_tsv(system.file("extdata/composition.tsv", package = "ncfigR"))
+markers <- readr::read_tsv(system.file("extdata/marker_matrix.tsv", package = "ncfigR"))
+palette <- read_nc_palette(system.file("extdata/cell_type_palette.tsv", package = "ncfigR"))
+
+domain_map <- plot_embedding_panel(embedding, color_col = "cell_type", palette = palette, label = TRUE)
+composition_panel <- plot_composition_panel(composition, palette = palette)
+marker_panel <- plot_marker_heatmap(markers)
+fig <- compose_nc_figure(list(domain_map, composition_panel, marker_panel), ncol = 2, title = "Spatial tissue niche")
+```

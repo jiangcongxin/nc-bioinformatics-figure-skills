@@ -1,0 +1,16 @@
+source	target	score	condition	score_type
+T cell	Myeloid	0.82	Disease	sender
+Myeloid	T cell	0.76	Disease	sender
+Myeloid	Stromal	0.63	Disease	sender
+Stromal	T cell	0.44	Disease	sender
+B cell	T cell	0.36	Disease	sender
+T cell	Myeloid	0.70	Disease	receiver
+Myeloid	T cell	0.58	Disease	receiver
+Myeloid	Stromal	0.66	Disease	receiver
+Stromal	T cell	0.51	Disease	receiver
+B cell	T cell	0.32	Disease	receiver
+T cell	Myeloid	0.42	Control	sender
+Myeloid	T cell	0.31	Control	sender
+Myeloid	Stromal	0.40	Control	sender
+Stromal	T cell	0.38	Control	sender
+B cell	T cell	0.29	Control	sender

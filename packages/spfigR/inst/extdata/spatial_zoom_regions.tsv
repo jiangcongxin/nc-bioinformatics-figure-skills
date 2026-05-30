@@ -1,0 +1,3 @@
+region_id	xmin	xmax	ymin	ymax	label
+tumor_edge	1.5	3.2	-0.2	1.3	Tumor-immune edge
+vascular_stroma	-0.2	1.4	1.8	3.2	Vascular stroma

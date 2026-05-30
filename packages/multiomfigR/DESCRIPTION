@@ -1,0 +1,24 @@
+Package: multiomfigR
+Title: NC-Style Multi-Omics Integration Figure Toolkit
+Version: 0.1.0
+Authors@R: person(given = "Jiang", family = "Congxin", role = c("aut", "cre"), email = "jcx981212@163.com")
+Author: Jiang Congxin
+Maintainer: Jiang Congxin <jcx981212@163.com>
+Description: R toolkit for training and generating NC-style multi-omics integration figures from traceable embedding, modality metric, cross-dataset validation, regulatory link, and pathway program source-data tables. It builds on ncfigR for shared theme, heatmap, network, embedding, composition, and export conventions.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Depends:
+    R (>= 4.1.0)
+Imports:
+    ncfigR,
+    ggplot2,
+    rlang
+Suggests:
+    readr,
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown
+Config/testthat/edition: 3
+VignetteBuilder: knitr

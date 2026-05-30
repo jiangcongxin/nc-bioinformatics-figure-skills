@@ -1,0 +1,7 @@
+source	target	weight	edge_type
+T cell	Myeloid	0.82	activation
+Myeloid	T cell	0.76	chemokine
+Myeloid	Stromal	0.63	TGFb
+T cell	Myeloid	0.55	costimulation
+Stromal	T cell	0.44	chemokine
+B cell	T cell	0.36	antigen_presentation

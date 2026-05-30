@@ -1,0 +1,17 @@
+---
+title: "Benchmark And Case"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Benchmark And Case}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, eval=FALSE}
+library(ncfigR)
+metrics <- readr::read_tsv(system.file("extdata/benchmark_metrics.tsv", package = "ncfigR"))
+embedding <- readr::read_tsv(system.file("extdata/embedding.tsv", package = "ncfigR"))
+p1 <- plot_benchmark_heatmap(metrics, metric_col = "metric")
+p2 <- plot_embedding_panel(embedding, color_col = "cell_type")
+fig <- compose_nc_figure(list(p1, p2), ncol = 2, title = "Benchmark and case")
+```

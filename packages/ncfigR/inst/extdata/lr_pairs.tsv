@@ -1,0 +1,9 @@
+source	target	ligand	receptor	score	p_adj	condition_delta
+T_cell	Myeloid	IFNG	IFNGR1	0.90	0.001	0.30
+Myeloid	T_cell	CXCL10	CXCR3	0.80	0.004	0.25
+Fibroblast	Myeloid	CXCL12	CXCR4	0.70	0.010	0.20
+B_cell	T_cell	CD40	CD40LG	0.55	0.020	-0.10
+Myeloid	Fibroblast	TNF	TNFRSF1A	0.75	0.006	0.35
+Fibroblast	T_cell	CCL2	CCR2	0.50	0.030	0.18
+T_cell	B_cell	IL21	IL21R	0.45	0.040	-0.05
+Myeloid	B_cell	BAFF	TNFRSF13B	0.40	0.050	0.12

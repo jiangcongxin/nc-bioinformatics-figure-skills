@@ -1,0 +1,15 @@
+cell_id	x	y	cell_type	group	score
+cell_001	-2.2	1.1	T cell	Control	0.20
+cell_002	-2.0	1.4	T cell	Control	0.28
+cell_003	-1.8	0.9	T cell	Disease	0.46
+cell_004	-1.5	1.2	T cell	Disease	0.52
+cell_005	0.4	-1.3	B cell	Control	0.12
+cell_006	0.7	-1.1	B cell	Control	0.18
+cell_007	0.9	-1.4	B cell	Disease	0.36
+cell_008	1.2	-1.2	B cell	Disease	0.42
+cell_009	2.0	0.8	Myeloid	Control	0.58
+cell_010	2.2	1.0	Myeloid	Disease	0.72
+cell_011	2.5	0.6	Myeloid	Disease	0.81
+cell_012	-0.4	-2.1	Stromal	Control	0.22
+cell_013	-0.1	-2.3	Stromal	Disease	0.31
+cell_014	0.2	-2.0	Stromal	Disease	0.49

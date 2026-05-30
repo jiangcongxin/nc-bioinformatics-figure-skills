@@ -1,0 +1,2 @@
+image_id	image_path	xmin	xmax	ymin	ymax	note
+toy_he	images/toy_he.png	0	3	0	3	placeholder image manifest for future histology overlay

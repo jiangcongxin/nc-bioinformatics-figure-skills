@@ -1,0 +1,6 @@
+export(compose_communication_figure)
+export(plot_differential_communication_panel)
+export(plot_lr_heatmap_panel)
+export(plot_lr_network_panel)
+export(plot_sender_receiver_score_panel)
+importFrom(rlang,.data)

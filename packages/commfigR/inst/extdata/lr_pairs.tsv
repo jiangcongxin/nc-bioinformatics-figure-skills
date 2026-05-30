@@ -1,0 +1,13 @@
+source	target	ligand	receptor	score	p_value	condition
+T cell	Myeloid	IFNG	IFNGR1	0.82	0.001	Disease
+T cell	Myeloid	CD40LG	CD40	0.55	0.012	Disease
+Myeloid	T cell	CXCL10	CXCR3	0.76	0.003	Disease
+Myeloid	Stromal	TGFB1	TGFBR2	0.63	0.008	Disease
+Stromal	T cell	CXCL12	CXCR4	0.44	0.040	Disease
+B cell	T cell	CD74	MIF	0.36	0.050	Disease
+T cell	Myeloid	IFNG	IFNGR1	0.42	0.030	Control
+T cell	Myeloid	CD40LG	CD40	0.28	0.080	Control
+Myeloid	T cell	CXCL10	CXCR3	0.31	0.060	Control
+Myeloid	Stromal	TGFB1	TGFBR2	0.40	0.040	Control
+Stromal	T cell	CXCL12	CXCR4	0.38	0.050	Control
+B cell	T cell	CD74	MIF	0.29	0.090	Control

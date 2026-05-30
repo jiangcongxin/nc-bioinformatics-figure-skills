@@ -1,7 +1,7 @@
 {
   "name": "nc-bioinformatics-figure-skills",
-  "version": "2.0.0",
-  "description": "Nature Communications-first bioinformatics figure visualization skill library built from GitHub-code-backed omics papers.",
+  "version": "2.1.0",
+  "description": "NC-style bioinformatics figure decision, visual QA, project scaffold, NC GitHub code mining, R package routing, code recipe drilldown, and R-first ncfigR/scfigR/spfigR/commfigR/trajfigR/benchfigR/multiomfigR plotting toolkit assistant with A1/A2/A3 GitHub code-pattern evidence.",
   "author": {
     "name": "Jiang Congxin"
   },
@@ -21,8 +21,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "NC 生信绘图 Skills",
-    "shortDescription": "从 NC 优先、GitHub 可复现论文学习生信 Figure 可视化。",
-    "longDescription": "A local Codex plugin that turns a 50-paper Nature Communications-first bioinformatics visualization library into reusable plotting skills, paper dissection workflows, figure planning templates, and R/Python plotting skeletons.",
+    "shortDescription": "NC 生信 Figure 决策、QA、GitHub 挖掘、R 包路由与 ncfigR/scfigR/spfigR/commfigR/trajfigR/benchfigR/multiomfigR。",
+    "longDescription": "A local Codex plugin that turns a Nature Communications-first, GitHub-code-backed bioinformatics visualization library into single-cell, spatial, multi-omics, communication, trajectory, benchmark, and genome-track figure decision support. It includes NC GitHub Code Mining Mode and R Package Router Mode, mapping statically inspected A1/A2/A3 repositories into reusable code patterns, source-data schemas, local R package targets such as ncfigR/scfigR/spfigR/commfigR/trajfigR/benchfigR/multiomfigR, and project-transfer plotting scaffolds. v2.1 includes working scfigR, spfigR, commfigR, trajfigR, benchfigR, and multiomfigR MVPs for single-cell Atlas Overview, spatial tissue niche, cell-cell communication, trajectory, benchmark plus biological case, and multi-omics integration figures while ncfigR remains the shared base and fallback toolkit.",
     "developerName": "Jiang Congxin",
     "category": "Research",
     "capabilities": [
@@ -35,7 +35,7 @@
     "privacyPolicyURL": "https://github.com/jiangcongxin/nc-bioinformatics-figure-skills",
     "termsOfServiceURL": "https://github.com/jiangcongxin/nc-bioinformatics-figure-skills",
     "defaultPrompt": [
-      "Use nc-bioinformatics-figure-skills when the user wants to learn Nature Communications bioinformatics figure visualization, inspect GitHub figure code, build plotting skill modules, or design manuscript figures from omics analysis results."
+      "Use nc-bioinformatics-figure-skills when the user wants to learn or design NC-style bioinformatics figures, decide what belongs in a main figure, choose plot types, assemble panels, audit visual quality, generate project plotting scaffolds, choose palettes, mine NC/Nature GitHub figure code, map repo patterns to local R plotting packages, inspect A1/A2/A3 GitHub-backed figure code, drill into repo-level code recipes, build a project-transfer code-learning scaffold, use local ncfigR/scfigR/spfigR/commfigR/trajfigR/benchfigR/multiomfigR R plotting toolkits, or generate reusable R/Python plotting templates."
     ],
     "brandColor": "#2563EB",
     "screenshots": []

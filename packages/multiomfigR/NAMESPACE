@@ -1,0 +1,7 @@
+export(compose_multiomics_figure)
+export(plot_cross_dataset_validation_panel)
+export(plot_feature_link_panel)
+export(plot_integration_embedding_panel)
+export(plot_modality_metric_panel)
+export(plot_pathway_program_panel)
+importFrom(rlang,.data)

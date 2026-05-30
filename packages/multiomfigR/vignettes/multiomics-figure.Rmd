@@ -1,0 +1,23 @@
+---
+title: "NC-Style Multi-Omics Integration Figure"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{NC-Style Multi-Omics Integration Figure}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, eval=FALSE}
+library(readr)
+library(multiomfigR)
+library(ncfigR)
+
+embedding <- read_tsv(system.file("extdata/integration_embedding.tsv", package = "multiomfigR"))
+metrics <- read_tsv(system.file("extdata/modality_metrics.tsv", package = "multiomfigR"))
+validation <- read_tsv(system.file("extdata/cross_dataset_validation.tsv", package = "multiomfigR"))
+links <- read_tsv(system.file("extdata/feature_links.tsv", package = "multiomfigR"))
+programs <- read_tsv(system.file("extdata/pathway_programs.tsv", package = "multiomfigR"))
+
+fig <- compose_multiomics_figure(embedding, metrics, validation, links, programs)
+export_figure_bundle(fig, "multiomics_overview", out_dir = "figures/exports", width = 7, height = 5)
+```

@@ -1,0 +1,6 @@
+export(compose_spatial_niche_figure)
+export(plot_spatial_composition_panel)
+export(plot_spatial_domain_panel)
+export(plot_spatial_feature_panel)
+export(plot_spatial_zoom_panel)
+importFrom(rlang,.data)

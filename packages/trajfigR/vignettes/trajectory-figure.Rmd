@@ -1,0 +1,23 @@
+---
+title: "NC-Style Trajectory Figure"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{NC-Style Trajectory Figure}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, eval=FALSE}
+library(readr)
+library(trajfigR)
+library(ncfigR)
+
+cells <- read_tsv(system.file("extdata/trajectory_cells.tsv", package = "trajfigR"))
+branches <- read_tsv(system.file("extdata/branch_probabilities.tsv", package = "trajfigR"))
+trends <- read_tsv(system.file("extdata/gene_trends.tsv", package = "trajfigR"))
+transitions <- read_tsv(system.file("extdata/state_transitions.tsv", package = "trajfigR"))
+velocity <- read_tsv(system.file("extdata/velocity_vectors.tsv", package = "trajfigR"))
+
+fig <- compose_trajectory_figure(cells, branches, trends, transitions, velocity)
+export_figure_bundle(fig, "trajectory_overview", out_dir = "figures/exports", width = 7, height = 5)
+```

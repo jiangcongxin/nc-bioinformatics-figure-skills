@@ -1,0 +1,23 @@
+---
+title: "Cell-Cell Communication Figure With commfigR"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Cell-Cell Communication Figure With commfigR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, message=FALSE}
+library(commfigR)
+library(ncfigR)
+```
+
+```{r}
+lr <- readr::read_tsv(system.file("extdata/lr_pairs.tsv", package = "commfigR"), show_col_types = FALSE)
+scores <- readr::read_tsv(system.file("extdata/communication_scores.tsv", package = "commfigR"), show_col_types = FALSE)
+diff <- readr::read_tsv(system.file("extdata/differential_lr.tsv", package = "commfigR"), show_col_types = FALSE)
+edges <- readr::read_tsv(system.file("extdata/network_edges.tsv", package = "commfigR"), show_col_types = FALSE)
+
+fig <- compose_communication_figure(lr, scores, diff, edges)
+fig
+```

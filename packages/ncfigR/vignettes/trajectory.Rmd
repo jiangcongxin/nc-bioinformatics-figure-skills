@@ -1,0 +1,17 @@
+---
+title: "Trajectory"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Trajectory}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, eval=FALSE}
+library(ncfigR)
+embedding <- readr::read_tsv(system.file("extdata/embedding.tsv", package = "ncfigR"))
+trajectory <- readr::read_tsv(system.file("extdata/trajectory.tsv", package = "ncfigR"))
+p1 <- plot_embedding_panel(embedding, color_col = "group")
+p2 <- plot_trajectory_trend(trajectory, group_col = "state")
+fig <- compose_nc_figure(list(p1, p2), ncol = 2, title = "Trajectory")
+```

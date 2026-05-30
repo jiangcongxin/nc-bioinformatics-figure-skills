@@ -1,0 +1,24 @@
+---
+title: "Single-Cell Atlas Overview With scfigR"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Single-Cell Atlas Overview With scfigR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, message=FALSE}
+library(scfigR)
+library(ncfigR)
+```
+
+```{r}
+embedding <- readr::read_tsv(system.file("extdata/embedding.tsv", package = "scfigR"), show_col_types = FALSE)
+composition <- readr::read_tsv(system.file("extdata/composition.tsv", package = "scfigR"), show_col_types = FALSE)
+markers <- readr::read_tsv(system.file("extdata/marker_dotplot.tsv", package = "scfigR"), show_col_types = FALSE)
+scores <- readr::read_tsv(system.file("extdata/module_scores.tsv", package = "scfigR"), show_col_types = FALSE)
+palette <- read_nc_palette(system.file("extdata/cell_type_palette.tsv", package = "scfigR"))
+
+fig <- compose_sc_atlas_figure(embedding, composition, markers, scores, palette = palette)
+fig
+```

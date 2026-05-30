@@ -1,0 +1,16 @@
+---
+title: "Cell-Cell Communication"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Cell-Cell Communication}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, eval=FALSE}
+library(ncfigR)
+lr <- readr::read_tsv(system.file("extdata/lr_pairs.tsv", package = "ncfigR"))
+p1 <- plot_lr_heatmap(lr)
+p2 <- plot_lr_network(lr, top_n = 8)
+fig <- compose_nc_figure(list(p1, p2), ncol = 2, title = "Communication")
+```

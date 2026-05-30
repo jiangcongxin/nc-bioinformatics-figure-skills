@@ -1,0 +1,13 @@
+cell_id	x	y	label	score	method
+C001	0.1	0.2	State_1	0.10	Method_A
+C002	0.2	0.3	State_1	0.18	Method_A
+C003	0.4	0.4	State_1	0.22	Method_A
+C004	0.8	0.7	State_2	0.55	Method_A
+C005	1.0	0.8	State_2	0.62	Method_A
+C006	1.2	0.9	State_2	0.70	Method_A
+C007	1.6	1.2	State_3	0.85	Method_A
+C008	1.8	1.4	State_3	0.90	Method_A
+C009	1.7	0.4	State_4	0.78	Method_A
+C010	1.9	0.2	State_4	0.82	Method_A
+C011	2.1	0.1	State_4	0.88	Method_A
+C012	2.2	0.3	State_4	0.92	Method_A

@@ -1,0 +1,17 @@
+cell_id	x	y	cell_type	modality	dataset	integration_score
+C001	0.10	0.20	T_cell	RNA	Atlas_1	0.92
+C002	0.25	0.25	T_cell	ATAC	Atlas_1	0.90
+C003	0.45	0.35	T_cell	RNA	Atlas_2	0.88
+C004	0.60	0.45	T_cell	Protein	Atlas_2	0.86
+C005	1.10	0.75	Myeloid	RNA	Atlas_1	0.84
+C006	1.25	0.85	Myeloid	ATAC	Atlas_1	0.82
+C007	1.45	0.95	Myeloid	RNA	Atlas_2	0.80
+C008	1.62	1.05	Myeloid	Protein	Atlas_2	0.79
+C009	0.95	1.45	Stromal	RNA	Atlas_1	0.77
+C010	1.10	1.60	Stromal	ATAC	Atlas_1	0.75
+C011	1.28	1.74	Stromal	RNA	Atlas_2	0.73
+C012	1.45	1.88	Stromal	Protein	Atlas_2	0.72
+C013	2.00	0.45	Epithelial	RNA	Atlas_1	0.85
+C014	2.20	0.58	Epithelial	ATAC	Atlas_1	0.83
+C015	2.38	0.72	Epithelial	RNA	Atlas_2	0.81
+C016	2.55	0.90	Epithelial	Protein	Atlas_2	0.79

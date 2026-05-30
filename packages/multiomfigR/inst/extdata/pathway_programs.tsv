@@ -1,0 +1,17 @@
+program	group	score
+Inflammation	T_cell	0.6
+Inflammation	Myeloid	1.4
+Inflammation	Stromal	0.8
+Inflammation	Epithelial	0.5
+Interferon	T_cell	1.1
+Interferon	Myeloid	1.2
+Interferon	Stromal	0.4
+Interferon	Epithelial	0.3
+EMT	T_cell	-0.2
+EMT	Myeloid	0.2
+EMT	Stromal	1.3
+EMT	Epithelial	0.9
+Metabolism	T_cell	0.4
+Metabolism	Myeloid	0.6
+Metabolism	Stromal	0.7
+Metabolism	Epithelial	1.2

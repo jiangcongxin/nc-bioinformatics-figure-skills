@@ -1,0 +1,23 @@
+---
+title: "NC-Style Benchmark and Biological Case Figure"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{NC-Style Benchmark and Biological Case Figure}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, eval=FALSE}
+library(readr)
+library(benchfigR)
+library(ncfigR)
+
+metrics <- read_tsv(system.file("extdata/benchmark_metrics.tsv", package = "benchfigR"))
+ranks <- read_tsv(system.file("extdata/benchmark_ranks.tsv", package = "benchfigR"))
+runtime <- read_tsv(system.file("extdata/runtime_metrics.tsv", package = "benchfigR"))
+robustness <- read_tsv(system.file("extdata/robustness_metrics.tsv", package = "benchfigR"))
+case <- read_tsv(system.file("extdata/case_embedding.tsv", package = "benchfigR"))
+
+fig <- compose_benchmark_case_figure(metrics, ranks, runtime, robustness, case)
+export_figure_bundle(fig, "benchmark_case", out_dir = "figures/exports", width = 7, height = 5)
+```
