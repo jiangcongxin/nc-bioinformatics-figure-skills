@@ -12,7 +12,7 @@ library(commfigR)
 library(ncfigR)
 ```
 
-```{r}
+```{r, fig.width=10, fig.height=9}
 lr <- readr::read_tsv(system.file("extdata/lr_pairs.tsv", package = "commfigR"), show_col_types = FALSE)
 scores <- readr::read_tsv(system.file("extdata/communication_scores.tsv", package = "commfigR"), show_col_types = FALSE)
 diff <- readr::read_tsv(system.file("extdata/differential_lr.tsv", package = "commfigR"), show_col_types = FALSE)
@@ -21,3 +21,22 @@ edges <- readr::read_tsv(system.file("extdata/network_edges.tsv", package = "com
 fig <- compose_communication_figure(lr, scores, diff, edges)
 fig
 ```
+
+## Condition-separated overview
+
+The bundled tables are synthetic demonstrations. Scores are summarized
+separately by condition; display limits do not remove rows from the summaries.
+
+```{r, fig.width=7.2, fig.height=8.7}
+overview <- compose_communication_overview(lr, top_n = 6, data.out = TRUE)
+overview$plot
+```
+
+`overview$data$display` and `overview$data$network_edges` hold the exact
+displayed values. `overview$data$edges` and `overview$data$totals` retain all
+supplied interactions. Missing exported interactions are absent, not measured
+zeros. These descriptive score differences are not donor-level tests.
+
+For a traceable Agent task use `scripts/run_comm_job.R` from the repository.
+Rendering success remains `needs_review`; inspect PNG and vector artwork before
+submitting the six-check review through `scripts/review_comm_job.R`.

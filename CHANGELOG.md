@@ -1,5 +1,21 @@
 # Changes
 
+## Skill 2.3.0 / commfigR 0.2.0 / ncfigR 0.2.2
+
+- Add an existing-results communication task with canonical/CellChat table
+  adapters, strict input contracts and condition-separated score summaries.
+- Export four-panel overviews, exact display selections, methods, frozen inputs,
+  reproduction configuration and actionable JSON checks; successful rendering
+  remains needs_review until evidence-backed visual inspection.
+- Add a task-bound generic figure review gate in ncfigR, used by commfigR.
+- Preserve LR identities in heatmaps; reject condition pooling in legacy network
+  panels, and sum supplied single-condition edges rather than average them.
+- Add the public human-skin CellChat example with fixed object checksums and
+  CC BY 4.0 attribution. Existing inference is exported, not recomputed.
+- Lock the three-package runtime and extend package/CLI checks and CI coverage.
+- Route communication requests to a small on-demand execution module; keep
+  spatial, trajectory, benchmark and multi-omics packages explicitly experimental.
+
 ## Skill 2.2.0
 
 - Focus the main skill on plotting and reviewing existing single-cell results.

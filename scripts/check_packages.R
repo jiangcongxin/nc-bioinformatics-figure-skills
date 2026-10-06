@@ -11,9 +11,9 @@ dir.create(library_dir)
 .libPaths(c(library_dir, .libPaths()))
 Sys.setenv(R_LIBS = paste(.libPaths(), collapse = .Platform$path.sep),
            `_R_CHECK_FORCE_SUGGESTS_` = "false")
-for (pkg in c("ncfigR", "scfigR")) {
+for (pkg in c("ncfigR", "scfigR", "commfigR")) {
   path <- file.path(root, "packages", pkg)
   utils::install.packages(path, repos = NULL, type = "source", lib = library_dir)
   rcmdcheck::rcmdcheck(path, args = "--no-manual", error_on = "warning")
 }
-message("Both packages passed checks, including examples, tests, and vignettes.")
+message("All three task-runtime packages passed checks, including examples, tests, and vignettes.")

@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task": "communication_overview",
+  "job_id": "human-skin-communication",
+  "inputs": {
+    "table": "cache/human-skin.tsv",
+    "format": "canonical",
+    "provenance": "Suoqin Jin (2023), doi:10.6084/m9.figshare.24516340.v1, CC BY 4.0; existing LS/NL objects exported with CellChat subsetCommunication(thresh=0.05), upstream pval < 0.05; all exported types retained",
+    "score_definition": "Existing CellChat inferred communication probability (prob); score sums are descriptive",
+    "p_value_definition": "Existing CellChat permutation/model pval; not adjusted donor-level or between-condition evidence"
+  },
+  "analysis": {"p_max": null},
+  "figure": {"width_mm": 250, "height_mm": 280, "top_n": 12},
+  "output_dir": "job-runs"
+}

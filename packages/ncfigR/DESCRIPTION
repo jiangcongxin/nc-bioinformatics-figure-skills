@@ -1,6 +1,6 @@
 Package: ncfigR
 Title: NC-Style Bioinformatics Figure Toolkit
-Version: 0.2.1
+Version: 0.2.2
 Authors@R: person(given = "Jiang", family = "Congxin", role = c("aut", "cre"), email = "jcx981212@163.com")
 Author: Jiang Congxin
 Maintainer: Jiang Congxin <jcx981212@163.com>
@@ -8,7 +8,6 @@ Description: R tools for drawing bioinformatics panels from source-data tables, 
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
 Depends:
     R (>= 4.1.0)
 Imports:
@@ -23,7 +22,8 @@ Imports:
     rlang,
     grDevices,
     svglite,
-    utils
+    utils,
+    jsonlite
 Suggests:
     ComplexHeatmap,
     circlize,
@@ -37,3 +37,4 @@ Config/testthat/edition: 3
 VignetteBuilder: knitr
 URL: https://github.com/jiangcongxin/nc-bioinformatics-figure-skills
 BugReports: https://github.com/jiangcongxin/nc-bioinformatics-figure-skills/issues
+Config/roxygen2/version: 8.0.0

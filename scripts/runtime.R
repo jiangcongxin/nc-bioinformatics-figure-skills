@@ -1,9 +1,9 @@
 read_runtime_lock <- function(root) {
   lock <- utils::read.delim(file.path(root, "runtime-lock.tsv"), colClasses = "character")
   if (!identical(names(lock), c("package", "version")) ||
-      !identical(lock$package, c("ncfigR", "scfigR")) || anyNA(lock) ||
+      !identical(lock$package, c("ncfigR", "scfigR", "commfigR")) || anyNA(lock) ||
       any(!grepl("^[0-9]+[.][0-9]+[.][0-9]+$", lock$version))) {
-    stop("Invalid runtime-lock.tsv: expected ncfigR and scfigR with exact release versions.")
+    stop("Invalid runtime-lock.tsv: expected ncfigR, scfigR and commfigR with exact release versions.")
   }
   for (i in seq_len(nrow(lock))) {
     description <- read.dcf(file.path(root, "packages", lock$package[i], "DESCRIPTION"))

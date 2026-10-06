@@ -1,6 +1,6 @@
 # Optional Other Plotting Domains
 
-Load only when the user requests spatial, cell-cell communication, trajectory, benchmark, multi-omics, genome-track, or other non-atlas visualization. These domains are outside the stable single_cell_atlas runner and its locked two-package workflow. Do not send their tables to run_sc_job.R.
+Load only when the user requests spatial, trajectory, benchmark, multi-omics, genome-track, or additional non-atlas visualization. These domains are outside the stable single_cell_atlas runner. For the supported communication_overview task use communication_execution.md instead. Do not send communication tables to run_sc_job.R.
 
 Read only the matching domain API and source-data contract. Verify package availability, exported functions, implementation and tests before calling anything. Historical MVP routing below describes candidate capabilities, not equivalent validation or a supported execution/review loop. Report unsupported panels clearly; do not imply that an image overlay, velocity analysis, or statistical test is implemented from a template alone.
 
@@ -35,7 +35,7 @@ Routing defaults:
 - single-cell atlas, UMAP, marker dotplot, composition, module score -> `scfigR` prototype; verify actual functions and tests, `ncfigR` shared base/fallback
 - spatial tissue map, domain, spatial feature, zoom, niche composition -> `spfigR` prototype; verify actual functions and tests, `ncfigR` shared base/fallback
 - histology image overlay / segmentation mask overlay -> `spfigR` package target, image-specific overlay still `stub needed`
-- LR heatmap, communication network, sender/receiver score, differential communication -> `commfigR` prototype; verify actual functions and tests, `ncfigR` shared base/fallback
+- Existing communication overview -> `commfigR` 0.2.0 task; read `communication_execution.md`. Differential communication is a separate direct API and needs confirmed upstream statistics.
 - pseudotime, velocity, branch, gene trend, state transition -> `trajfigR` prototype; verify actual functions and tests, `ncfigR` shared base/fallback
 - method benchmark, rank plot, runtime/memory, robustness, biological case panel -> `benchfigR` prototype; verify actual functions and tests, `ncfigR` shared base/fallback
 - multi-omics integration, cross-dataset validation, regulatory/feature links, pathway/program panel -> `multiomfigR` prototype; verify actual functions and tests, `ncfigR` shared base/fallback

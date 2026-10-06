@@ -1,6 +1,26 @@
 # commfigR API
 
-Purpose: `commfigR` is the third domain package built from the NC GitHub code-learning pipeline. It implements a source-data-first cell-cell communication figure MVP and uses `ncfigR` for shared theme, LR heatmap, network, composition, and export behavior.
+`commfigR` 0.2.0 draws existing communication results. The supported Agent task
+is `communication_overview`; read [communication_execution.md](communication_execution.md).
+Other companion packages remain prototypes, not equivalent task engines.
+
+## Checked Overview Interfaces
+
+- `as_cellchat_table(data, condition)`: exported prob/pval to score/p_value,
+  preserving complexes, labels and upstream metadata.
+- `prepare_communication_data(data, p_max=NULL, top_n=12, cell_type_order=NULL,
+  max_pairs=16)`: validate inputs; separate-condition score sums and display selection.
+- `compose_communication_overview(data, ..., data.out=TRUE, network_top_n=20)`:
+  plot plus exact panel values. Networks show top edges per condition.
+- `run_comm_job(spec_path, output_dir=NULL)`: unique attempt, source snapshots,
+  artwork, checks, methods and frozen reproduction configuration.
+- `review_comm_job(run_dir, review_path)`: artifact-bound six-check visual review.
+
+Overview input: source,target,ligand,receptor,score; optional condition,p_value.
+Unique keys per condition/source/target/ligand/receptor; finite non-negative
+scores; upstream p-values in [0,1]. No inferred significance or missing zeros.
+LR/cell-pair display ranks pool sums across conditions; heatmaps and totals
+remain separate and use all retained rows. Exact selections are exported.
 
 ## Package Location
 
@@ -81,6 +101,11 @@ T cell	Myeloid	0.82	activation
 
 ## Current Boundaries
 
-- `commfigR` v0.1.0 is a Cell-Cell Communication MVP.
+- `commfigR` v0.2.0 supports the overview task. Differential panels are direct
+  APIs requiring confirmed upstream statistics, not a supported task engine.
+- LR heatmaps preserve LR identities and condition facets. Network panels
+  require one condition and sum supplied rows per sender/receiver; the legacy
+  composition requires explicit network edges for multi-condition LR inputs.
+- Direct APIs do not enforce the CLI runtime lock or automatically review figures.
 - It does not run CellPhoneDB, NicheNet, CellChat, or FastCCC analyses; it plots exported source-data results.
 - Chord diagrams and spatial proximity overlays are future package targets.

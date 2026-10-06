@@ -29,3 +29,17 @@ written adapters. No third-party source functions were copied or vendored.
 References inspected on 2026-10-06. These are design references, not claims of
 upstream endorsement or journal-quality certification. Any future copied code
 must record the exact source revision and retain its applicable license notices.
+
+## CellChat communication export
+
+- Official interface: https://github.com/jinworks/CellChat/blob/main/tutorial/CellChat-vignette.Rmd
+- Existing objects: https://doi.org/10.6084/m9.figshare.24516340.v1
+  (Suoqin Jin, 2023; CC BY 4.0).
+- Adapter mapping: subsetCommunication source/target/ligand/receptor/prob/pval
+  to canonical table, preserving upstream metadata and receptor complex labels.
+- The real-data exporter calls the installed CellChat package only to extract
+  existing inferred interactions with an explicit threshold. It does not copy
+  CellChat implementation code or run inference. CellChat is optional, not a
+  dependency of normal CSV/TSV task execution.
+- The package retains condition-separated descriptive summaries and records
+  display ranking. Upstream p-values are not reinterpreted as donor-level tests.

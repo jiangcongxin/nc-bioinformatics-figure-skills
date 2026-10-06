@@ -6,7 +6,7 @@ Install the local ncfigR and scfigR packages using the repository README. scfigR
 
 For the stable CLI release, use `Rscript scripts/install_runtime.R` followed by
 `Rscript scripts/check_runtime.R`. Entry points enforce `runtime-lock.tsv` (ncfigR
-0.2.1 and scfigR 0.3.1), using the project-local library when present. The installer
+0.2.2, scfigR 0.3.1 and commfigR 0.2.0), using the project-local library when present. The installer
 requires dependencies to be available already and does not upgrade them.
 
 From the repository root:

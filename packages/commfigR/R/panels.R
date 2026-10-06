@@ -8,24 +8,33 @@ plot_lr_heatmap_panel <- function(data, source_col = "source", target_col = "tar
   }
   check_comm_columns(data, required, "ligand-receptor data")
 
-  p <- ncfigR::plot_lr_heatmap(
-    data = data,
-    source_col = source_col,
-    target_col = target_col,
-    value_col = value_col,
-    title = title
-  )
-
-  if (!is.null(condition_col)) {
-    p <- p + ggplot2::facet_wrap(stats::as.formula(paste("~", condition_col)))
-  }
-  p
+  check_comm_columns(data, c(ligand_col, receptor_col))
+  comm_numeric(data, value_col, c(0, Inf))
+  data <- comm_condition(data, condition_col)
+  comm_unique(data, c("condition", source_col, target_col, ligand_col, receptor_col))
+  data$lr_pair <- paste(data[[ligand_col]], data[[receptor_col]], sep = " / ")
+  data$cell_pair <- paste(data[[source_col]], data[[target_col]], sep = " -> ")
+  ggplot2::ggplot(data, ggplot2::aes(.data$cell_pair, .data$lr_pair, fill = .data[[value_col]])) +
+    ggplot2::geom_tile(colour = "white", linewidth = 0.2) +
+    ggplot2::facet_wrap(~condition) +
+    ggplot2::scale_fill_viridis_c(option = "D", name = value_col) +
+    ggplot2::labs(title = title, x = "Sender -> receiver", y = NULL) + ncfigR::nc_theme() +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1))
 }
 
 plot_lr_network_panel <- function(data, source_col = "source", target_col = "target",
                                   value_col = "score", top_n = 30,
                                   title = NULL) {
   check_comm_columns(data, c(source_col, target_col, value_col), "network data")
+  comm_numeric(data, value_col, c(0, Inf))
+  top_by_abs(data, value_col, top_n)
+  if ("condition" %in% names(data) && length(unique(data$condition)) > 1L) {
+    stop("Network panel requires one condition; use compose_communication_overview for multiple conditions.", call. = FALSE)
+  }
+  data <- as.data.frame(dplyr::summarise(dplyr::group_by(data,
+    .data[[source_col]], .data[[target_col]]),
+    aggregated_score = sum(.data[[value_col]]), .groups = "drop"))
+  data[[value_col]] <- data$aggregated_score
   ncfigR::plot_lr_network(
     data = data,
     source_col = source_col,
@@ -47,6 +56,9 @@ plot_sender_receiver_score_panel <- function(data, source_col = "source",
     required <- c(required, condition_col)
   }
   check_comm_columns(data, required, "communication score data")
+  comm_numeric(data, score_col, c(0, Inf))
+  data <- comm_condition(data, condition_col)
+  comm_unique(data, c("condition", source_col, target_col, score_type_col))
 
   data$pair <- paste(data[[source_col]], data[[target_col]], sep = " -> ")
   p <- ggplot2::ggplot(
@@ -59,9 +71,7 @@ plot_sender_receiver_score_panel <- function(data, source_col = "source",
     ggplot2::labs(title = title, x = NULL, y = NULL) +
     ncfigR::nc_theme()
 
-  if (!is.null(condition_col)) {
-    p <- p + ggplot2::facet_wrap(stats::as.formula(paste("~", condition_col)))
-  }
+  p <- p + ggplot2::facet_wrap(~condition)
   p
 }
 
@@ -79,6 +89,9 @@ plot_differential_communication_panel <- function(data, source_col = "source",
     "differential communication data"
   )
   plot_data <- data
+  comm_numeric(data, logfc_col)
+  comm_numeric(data, p_col, c(0, 1))
+  comm_unique(data, c(source_col, target_col, ligand_col, receptor_col))
   plot_data$lr_pair <- paste(plot_data[[ligand_col]], plot_data[[receptor_col]], sep = "-")
   plot_data$cell_pair <- paste(plot_data[[source_col]], plot_data[[target_col]], sep = " -> ")
   plot_data$rank_value <- -log10(pmax(plot_data[[p_col]], .Machine$double.xmin))
@@ -86,11 +99,11 @@ plot_differential_communication_panel <- function(data, source_col = "source",
 
   ggplot2::ggplot(
     plot_data,
-    ggplot2::aes(x = .data[[logfc_col]], y = stats::reorder(.data$lr_pair, .data[[logfc_col]]))
+    ggplot2::aes(x = .data[[logfc_col]], y = stats::reorder(paste(.data$cell_pair, .data$lr_pair), .data[[logfc_col]]))
   ) +
     ggplot2::geom_vline(xintercept = 0, colour = "grey75", linewidth = 0.3) +
     ggplot2::geom_segment(
-      ggplot2::aes(x = 0, xend = .data[[logfc_col]], yend = stats::reorder(.data$lr_pair, .data[[logfc_col]])),
+      ggplot2::aes(x = 0, xend = .data[[logfc_col]], yend = stats::reorder(paste(.data$cell_pair, .data$lr_pair), .data[[logfc_col]])),
       colour = "grey70",
       linewidth = 0.35
     ) +
@@ -110,7 +123,11 @@ compose_communication_figure <- function(lr_pairs,
   p_scores <- plot_sender_receiver_score_panel(communication_scores, title = "Sender / receiver score")
 
   if (is.null(network_edges)) {
-    network_edges <- lr_pairs
+    if ("condition" %in% names(lr_pairs) && length(unique(lr_pairs$condition)) > 1L) {
+      stop("Supply a single-condition network_edges table or use compose_communication_overview; conditions cannot be averaged.", call. = FALSE)
+    }
+    network_edges <- as.data.frame(dplyr::summarise(
+      dplyr::group_by(lr_pairs, .data$source, .data$target), score = sum(.data$score), .groups = "drop"))
     p_network <- plot_lr_network_panel(network_edges, value_col = "score", title = "Filtered network")
   } else {
     network_value_col <- if ("weight" %in% names(network_edges)) "weight" else "score"
@@ -125,5 +142,6 @@ compose_communication_figure <- function(lr_pairs,
     )
   }
 
+  panels <- lapply(panels, function(panel) patchwork::wrap_elements(full = panel))
   ncfigR::compose_nc_figure(panels, ncol = 2, title = title)
 }

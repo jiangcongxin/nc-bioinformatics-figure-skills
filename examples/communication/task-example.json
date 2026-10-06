@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task": "communication_overview",
+  "job_id": "synthetic-communication",
+  "inputs": {
+    "table": "../../packages/commfigR/inst/extdata/lr_pairs.tsv",
+    "format": "canonical",
+    "provenance": "Bundled synthetic demonstration, not biological evidence",
+    "score_definition": "Synthetic non-negative interaction score",
+    "p_value_definition": "Synthetic example p-values, not inferential evidence"
+  },
+  "analysis": {"p_max": null},
+  "figure": {"width_mm": 183, "height_mm": 220, "top_n": 6},
+  "output_dir": "job-runs"
+}

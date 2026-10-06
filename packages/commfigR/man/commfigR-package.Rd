@@ -7,9 +7,9 @@
 \alias{plot_differential_communication_panel}
 \alias{compose_communication_figure}
 \docType{package}
-\title{NC-Style Cell-Cell Communication Figure Toolkit}
+\title{Cell-Cell Communication Figures from Existing Results}
 \description{
-Source-data-first R functions for training and generating NC-style cell-cell communication figures.
+R functions for drawing traceable cell-cell communication figures from existing results.
 }
 \arguments{
 \item{data}{A source-data data frame for one panel.}

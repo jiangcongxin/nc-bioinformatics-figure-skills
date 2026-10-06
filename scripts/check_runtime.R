@@ -16,7 +16,7 @@ result <- tryCatch({
     packages = lapply(seq_len(nrow(lock)), function(i) list(package = lock$package[i], version = lock$version[i],
       library = dirname(getNamespaceInfo(lock$package[i], "path")))),
     dependency_versions = as.list(versions),
-    scope = "Exact versions for ncfigR/scfigR; third-party dependency versions are recorded, not fully locked.")
+    scope = "Exact versions for ncfigR/scfigR/commfigR; third-party dependency versions are recorded, not fully locked.")
 }, error = function(e) list(status = "failed", exit_code = 1L, message = conditionMessage(e)))
 if (requireNamespace("jsonlite", quietly = TRUE)) cat(jsonlite::toJSON(result, auto_unbox = TRUE, pretty = TRUE), "\n") else {
   cat("Runtime check failed: install jsonlite and the required package dependencies.\n")

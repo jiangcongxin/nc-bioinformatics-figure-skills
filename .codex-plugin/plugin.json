@@ -1,7 +1,7 @@
 {
   "name": "nc-bioinformatics-figure-skills",
-  "version": "2.2.0",
-  "description": "An Agent workflow for plotting and reviewing existing single-cell results with ncfigR and scfigR, traceable source data, checks and bounded corrections. Paper/code learning and other plotting domains are optional reference modules.",
+  "version": "2.3.0",
+  "description": "An Agent workflow for plotting and reviewing existing single-cell and communication results with ncfigR, scfigR and commfigR, traceable source data, checks and bounded corrections.",
   "author": {
     "name": "Jiang Congxin"
   },
@@ -21,7 +21,7 @@
   "interface": {
     "displayName": "单细胞结果绘图 Agent",
     "shortDescription": "调用 R 包绘制已有单细胞结果，检查图件、保留源数据并按报告修正。",
-    "longDescription": "Plot existing annotated single-cell results through a version-checked ncfigR/scfigR runtime. The Agent inspects source contracts, executes the atlas task, reads checks, reviews exported artwork and makes bounded presentation corrections without silently changing scientific inputs. The stable workflow covers annotated embeddings, cell composition, marker expression and three feature-expression maps. Figure planning, paper/code learning and other plotting domains remain available as on-demand references, not default execution modes or equivalent validated task engines.",
+    "longDescription": "Plot existing annotated single-cell results through a version-checked ncfigR/scfigR/commfigR runtime. The Agent executes atlas or existing-communication tasks, reads checks, reviews exported artwork and makes bounded presentation corrections without silently changing scientific inputs. Other plotting domains and paper/code learning remain on-demand references rather than equivalent validated task engines.",
     "developerName": "Jiang Congxin",
     "category": "Research",
     "capabilities": [

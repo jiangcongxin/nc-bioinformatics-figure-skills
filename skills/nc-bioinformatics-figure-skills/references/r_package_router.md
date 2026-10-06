@@ -9,7 +9,7 @@ Purpose: decide which local R plotting package should implement a user figure re
 | `ncfigR` | shared theme, palette validation, source-data adapters, basic panels, composition, export bundle, QA manifest | implemented base / fallback |
 | `scfigR` | single-cell atlas figures: embedding, marker dotplot, composition, module score, annotation validation | implemented MVP for Atlas Overview |
 | `spfigR` | spatial figures: tissue maps, domain maps, spatial feature maps, zoom-in panels, and niche composition | implemented MVP for Spatial Tissue Niche |
-| `commfigR` | communication figures: LR heatmap, sender/receiver score, filtered network, differential communication | implemented MVP for Cell-Cell Communication |
+| `commfigR` | communication overview task plus direct LR/network/differential APIs | 0.2.0 checked overview task; direct APIs have separate scope |
 | `trajfigR` | trajectory figures: pseudotime map, velocity arrows, branch probability, gene trends, state transition | implemented MVP for Trajectory |
 | `benchfigR` | benchmark figures: metric heatmap, rank plot, runtime/memory, robustness, biological case panel | implemented MVP for Benchmark + Biological Case |
 | `multiomfigR` | multi-omics figures: modality integration, cross-dataset validation, regulatory/feature links, pathway programs | implemented MVP for Multi-omics Integration |

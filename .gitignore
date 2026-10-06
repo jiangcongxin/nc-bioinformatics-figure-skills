@@ -13,3 +13,5 @@ examples/single-cell/pbmc3k-output/
 Rplots.pdf
 examples/single-cell/job-runs/
 .r-library/
+examples/communication/cache/
+examples/communication/job-runs/
