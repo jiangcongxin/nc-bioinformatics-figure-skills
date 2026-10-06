@@ -1,0 +1,54 @@
+name: R packages
+
+"on":
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      R_KEEP_PKG_SOURCE: "yes"
+      _R_CHECK_FORCE_SUGGESTS_: "false"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-pandoc@v2
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          working-directory: packages/ncfigR
+          dependencies: '"hard"'
+          extra-packages: any::rcmdcheck, any::testthat, any::knitr, any::rmarkdown, any::SeuratObject, any::jsonlite
+          needs: check
+      - name: Install shared toolkit and single-cell package
+        shell: Rscript {0}
+        run: |
+          install.packages("packages/ncfigR", repos = NULL, type = "source")
+          install.packages("packages/scfigR", repos = NULL, type = "source")
+      - name: Verify stable runtime versions
+        run: Rscript scripts/check_runtime.R
+      - name: Check packages including vignettes
+        shell: Rscript {0}
+        run: |
+          for (pkg in c("ncfigR", "scfigR")) {
+            rcmdcheck::rcmdcheck(file.path("packages", pkg), args = "--no-manual", error_on = "warning")
+          }
+      - name: Render example bundle
+        run: Rscript examples/single-cell/run_example.R
+      - name: Exercise skill entry points and review gate
+        run: Rscript scripts/test_sc_job_cli.R
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: single-cell-${{ matrix.os }}
+          path: examples/single-cell/output/

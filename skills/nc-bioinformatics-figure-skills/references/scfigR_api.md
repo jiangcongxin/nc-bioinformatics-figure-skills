@@ -1,5 +1,15 @@
 # scfigR API
 
+Current package version: **0.3.1**. Use [single_cell_execution.md](single_cell_execution.md) for the fixed task runner and report/review protocol. Start with the [single-cell guide](../../../examples/single-cell/README.md) for direct R plotting and PBMC3k examples.
+
+Marker and atlas functions support optional `marker_groups` and `data.out = TRUE`.
+The latter returns `list(plot, data)`; default plot returns are unchanged. Named
+gene groups must cover each observed gene once and agree with explicit ordering.
+Publication marker data include supplied means, detection fractions and pre-clipping
+`plot_expression`; job runs save them to `source-data/marker-plot-data.tsv`.
+
+`prepare_sc_atlas_data()` accepts a unique cell-level embedding/annotation table and a complete long expression table, including zeros. `load_sc_example()` returns bundled synthetic panel inputs. Atlas panels share one cell-type palette and order; marker detection fractions must be in `[0,1]`, and composition fractions must sum to one per sample for fill bars. Invalid inputs raise errors before plotting.
+
 Purpose: `scfigR` is the first domain package built from the NC GitHub code-learning pipeline. It implements a source-data-first single-cell Atlas Overview Figure MVP and uses `ncfigR` for shared theme, composition, palette, and export behavior.
 
 ## Package Location
@@ -12,8 +22,8 @@ packages/scfigR/
 
 | Function | Input Table | Required Columns | Output |
 |---|---|---|---|
-| `plot_sc_embedding_panel()` | `embedding.tsv` | `cell_id`, `x`, `y`, `cell_type` or chosen `color_col` | ggplot embedding panel |
-| `plot_cell_fraction_panel()` | `composition.tsv` | `group`, `cell_type`, `n`, `proportion` | ggplot stacked/fill/dodge composition panel |
+| `plot_sc_embedding_panel()` | `embedding.tsv` | `x`, `y`, `cell_type` or chosen `color_col`; unique `cell_id` if supplied | ggplot embedding panel |
+| `plot_cell_fraction_panel()` | `composition.tsv` | `group`, `cell_type`, `proportion`; optional `n` | ggplot stacked/fill/dodge composition panel |
 | `plot_marker_dotplot_panel()` | `marker_dotplot.tsv` | `feature`, `cell_type`, `avg_expression`, `pct_expression` | ggplot marker dotplot |
 | `plot_module_score_panel()` | `module_scores.tsv` | embedding mode: `x`, `y`, `score`; violin mode: `group`, `score` | ggplot score map or violin panel |
 | `compose_sc_atlas_figure()` | embedding, composition, marker, optional score tables | table-specific columns above | patchwork Atlas Overview Figure |

@@ -1,10 +1,10 @@
 Package: scfigR
 Title: NC-Style Single-Cell Figure Toolkit
-Version: 0.1.0
+Version: 0.3.1
 Authors@R: person(given = "Jiang", family = "Congxin", role = c("aut", "cre"), email = "jcx981212@163.com")
 Author: Jiang Congxin
 Maintainer: Jiang Congxin <jcx981212@163.com>
-Description: R toolkit for training and generating NC-style single-cell atlas overview figures from traceable source-data tables. It builds on ncfigR for shared theme, palette, composition, and export conventions.
+Description: R tools for preparing and drawing single-cell atlas figures from source-data tables. Combines embeddings, sample-level cell fractions, marker expression, and module scores with shared cell-type colors and validated inputs.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -12,14 +12,26 @@ RoxygenNote: 7.3.2
 Depends:
     R (>= 4.1.0)
 Imports:
-    ncfigR,
-    ggplot2,
+    ncfigR (>= 0.2.1),
+    dplyr,
+    readr,
+    grDevices,
+    stats,
+    grid,
+    patchwork,
+    ggrepel,
+    jsonlite,
+    tools,
+    utils,
+    ggplot2 (>= 3.4.0),
     scales,
     rlang
 Suggests:
-    readr,
     testthat (>= 3.0.0),
     knitr,
     rmarkdown
 Config/testthat/edition: 3
 VignetteBuilder: knitr
+Remotes: jiangcongxin/nc-bioinformatics-figure-skills/packages/ncfigR
+URL: https://github.com/jiangcongxin/nc-bioinformatics-figure-skills
+BugReports: https://github.com/jiangcongxin/nc-bioinformatics-figure-skills/issues

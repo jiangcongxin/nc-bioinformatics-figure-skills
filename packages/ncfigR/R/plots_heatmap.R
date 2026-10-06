@@ -1,7 +1,8 @@
 plot_marker_heatmap <- function(data, row_col = "feature", col_col = "cell_type",
                                 value_col = "value", fill_limits = NULL,
                                 title = NULL) {
-  check_columns(data, c(row_col, col_col, value_col), "marker heatmap data")
+  validate_panel_data(data, c(row_col, col_col, value_col), value_col,
+                      c(row_col, col_col), "marker heatmap data")
   ggplot2::ggplot(
     data,
     ggplot2::aes(x = .data[[col_col]], y = .data[[row_col]], fill = .data[[value_col]])

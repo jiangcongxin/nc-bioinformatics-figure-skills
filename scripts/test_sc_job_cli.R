@@ -1,0 +1,37 @@
+root <- normalizePath(".")
+source(file.path(root, "scripts", "runtime.R"))
+lock <- read_runtime_lock(root)
+activate_runtime(root)
+validate_runtime_versions(lock, lock$version)
+mismatch <- tryCatch({validate_runtime_versions(lock, c("0.0.0", lock$version[2])); NULL}, error = identity)
+stopifnot(inherits(mismatch, "error"), grepl("Runtime version mismatch", conditionMessage(mismatch)))
+output <- tempfile("sc job cli "); dir.create(output)
+script <- file.path(root, "scripts", "run_sc_job.R")
+review_script <- file.path(root, "scripts", "review_sc_job.R")
+Sys.setenv(R_LIBS = paste(.libPaths(), collapse = .Platform$path.sep))
+invoke <- function(script, arguments) {
+  stdout <- tempfile(); stderr <- tempfile()
+  status <- system2(file.path(R.home("bin"), "Rscript"), c(shQuote(script), vapply(arguments, shQuote, character(1))), stdout = stdout, stderr = stderr)
+  text <- readLines(stdout)
+  if (length(text) != 1L) stop("Expected one JSON response; stderr: ", paste(readLines(stderr), collapse = "\n"))
+  list(status = status, result = jsonlite::fromJSON(text, simplifyVector = FALSE))
+}
+run <- invoke(script, c("--job", file.path(root, "examples/single-cell/task-demo.json"), "--output", output))
+stopifnot(run$status == 2L, run$result$status == "needs_review")
+report <- jsonlite::read_json(run$result$report_path)
+checks <- stats::setNames(lapply(c("text_legibility", "label_overlap", "legend_consistency", "panel_layout", "color_scale", "biological_claims"),
+  function(key) list(status = "revise", evidence = paste("CLI integration fixture: actual visual approval remains pending for", key))),
+  c("text_legibility", "label_overlap", "legend_consistency", "panel_layout", "color_scale", "biological_claims"))
+review <- list(schema_version = "1.0", run_id = report$run_id, reviewer = "cli-test",
+  inspected_artifacts = list(report$artifacts$png, report$artifacts$pdf),
+  final_size_mm = list(width = report$figure$width_mm, height = report$figure$height_mm), checks = checks)
+review_path <- file.path(output, "review.json")
+jsonlite::write_json(review, review_path, auto_unbox = TRUE)
+decision <- invoke(review_script, c("--run", run$result$run_dir, "--review", review_path))
+stopifnot(decision$status == 2L, decision$result$status == "revise")
+failed <- invoke(script, c("--job", file.path(output, "absent.json"), "--output", output))
+stopifnot(failed$status == 1L, failed$result$status == "failed", file.exists(failed$result$report_path))
+reproduction <- invoke(file.path(run$result$run_dir, "reproduce.R"), character())
+if (reproduction$status != 2L) stop("Frozen-input reproduction failed: ", jsonlite::toJSON(reproduction, auto_unbox = TRUE))
+stopifnot(reproduction$status == 2L, reproduction$result$status == "needs_review")
+cat("CLI execution, failure report, revision gate and frozen-input reproduction passed.\n")

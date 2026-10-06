@@ -7,3 +7,9 @@ __pycache__/
 .ipynb_checkpoints/
 *.Rcheck/
 *.tar.gz
+examples/single-cell/cache/
+examples/single-cell/output/
+examples/single-cell/pbmc3k-output/
+Rplots.pdf
+examples/single-cell/job-runs/
+.r-library/

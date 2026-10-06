@@ -1,5 +1,13 @@
 # ncfigR API
 
+Current package version: **0.2.1**. See the [single-cell guide](../../../examples/single-cell/README.md) for installation, input validation rules, and export behavior.
+
+`compose_nc_figure()` now also accepts positive numeric `widths`, `heights` and
+`guides = "auto" / "collect" / "keep"`. Use explicit designs for mixed panels;
+do not distort equal-coordinate embeddings to fill layout space.
+
+`validate_panel_data()` checks table structure, required values, finite numeric columns, and unique keys. Palette names must be unique and colors valid. Embedding and composition panels support explicit category ordering. `compose_nc_figure()` supports custom labels and layout designs. Exports close their devices on errors, preserve previous bundles on failed rendering, and include a session record.
+
 Purpose: document the local R package used to turn high-quality NC/Nature GitHub figure-code patterns into reusable plotting functions.
 
 Package path inside the plugin:

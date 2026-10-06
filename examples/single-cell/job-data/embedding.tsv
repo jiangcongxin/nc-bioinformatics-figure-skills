@@ -1,0 +1,7 @@
+cell_id	x	y	cell_type	sample
+cell_01	-2.2	0.8	T	sample_1
+cell_02	-1.8	1.2	T	sample_1
+cell_03	0.2	-1.4	B	sample_1
+cell_04	0.6	-1.0	B	sample_1
+cell_05	2.0	0.6	Myeloid	sample_1
+cell_06	2.4	1.0	Myeloid	sample_1

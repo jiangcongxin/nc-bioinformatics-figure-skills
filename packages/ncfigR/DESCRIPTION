@@ -1,10 +1,10 @@
 Package: ncfigR
 Title: NC-Style Bioinformatics Figure Toolkit
-Version: 0.1.0
+Version: 0.2.1
 Authors@R: person(given = "Jiang", family = "Congxin", role = c("aut", "cre"), email = "jcx981212@163.com")
 Author: Jiang Congxin
 Maintainer: Jiang Congxin <jcx981212@163.com>
-Description: R toolkit for training and generating NC-style single-cell, spatial, communication, trajectory, and benchmark composite figures from traceable source-data tables, with optional Seurat adapters.
+Description: R tools for drawing bioinformatics panels from source-data tables, arranging composite figures, and exporting traceable figure bundles. Includes optional Seurat adapters and shared themes and palettes for single-cell, spatial, communication, trajectory, and benchmark figures.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -12,10 +12,9 @@ RoxygenNote: 7.3.2
 Depends:
     R (>= 4.1.0)
 Imports:
-    ggplot2,
+    ggplot2 (>= 3.4.0),
     patchwork,
     dplyr,
-    tidyr,
     readr,
     scales,
     ggrepel,
@@ -23,7 +22,8 @@ Imports:
     ggraph,
     rlang,
     grDevices,
-    svglite
+    svglite,
+    utils
 Suggests:
     ComplexHeatmap,
     circlize,
@@ -35,3 +35,5 @@ Suggests:
     rmarkdown
 Config/testthat/edition: 3
 VignetteBuilder: knitr
+URL: https://github.com/jiangcongxin/nc-bioinformatics-figure-skills
+BugReports: https://github.com/jiangcongxin/nc-bioinformatics-figure-skills/issues

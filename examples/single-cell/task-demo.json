@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "job_id": "synthetic-atlas",
+  "task": "single_cell_atlas",
+  "inputs": {
+    "embedding": "job-data/embedding.tsv",
+    "expression": "job-data/expression.tsv",
+    "expression_scale": "log_normalized",
+    "provenance": "Synthetic six-cell format demonstration; not experimental evidence"
+  },
+  "analysis": {"detection_threshold": 0},
+  "figure": {
+    "layout": "publication",
+    "width_mm": 183,
+    "height_mm": 126,
+    "cell_type_order": ["T", "B", "Myeloid"],
+    "feature_order": ["CD3D", "MS4A1", "LYZ"],
+    "feature_genes": ["CD3D", "MS4A1", "LYZ"],
+    "marker_scale": "gene_zscore"
+  },
+  "output_dir": "job-runs"
+}

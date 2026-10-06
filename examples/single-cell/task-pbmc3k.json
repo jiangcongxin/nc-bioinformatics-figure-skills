@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "job_id": "pbmc3k-atlas",
+  "task": "single_cell_atlas",
+  "inputs": {
+    "embedding": "pbmc3k-output/source-data/embedding.tsv",
+    "expression": "pbmc3k-output/source-data/expression.tsv",
+    "expression_scale": "log_normalized",
+    "provenance": "Satija Lab / 10x Genomics PBMC3k, SeuratData pbmc3k.final 3.1.4 (CC BY 4.0); source https://seurat.nygenome.org/src/contrib/pbmc3k.SeuratData_3.1.4.tar.gz; archive MD5 5fa763b229e38a44d0b6abec650b60a3 verified by run_pbmc3k.R. Existing UMAP and identities retained; RNA data layer supplies log-normalized expression. One sample, descriptive summaries only; no independent annotation validation or differential expression testing."
+  },
+  "analysis": {"detection_threshold": 0},
+  "figure": {
+    "layout": "publication",
+    "width_mm": 183,
+    "height_mm": 126,
+    "cell_type_order": ["Naive CD4 T", "Memory CD4 T", "CD8 T", "NK", "B", "CD14+ Mono", "FCGR3A+ Mono", "DC", "Platelet"],
+    "feature_order": ["CD3D", "IL7R", "MS4A1", "CD14", "LYZ", "FCGR3A", "NKG7", "FCER1A", "PPBP"],
+    "feature_genes": ["CD3D", "MS4A1", "LYZ"],
+    "marker_scale": "gene_zscore",
+    "palette": "pbmc3k-output/source-data/cell_type_palette.tsv"
+  },
+  "output_dir": "job-runs"
+}

@@ -19,11 +19,15 @@ read_nc_palette <- function(x, key_col = NULL, color_col = "color") {
 
   out <- as.character(pal[[color_col]])
   names(out) <- as.character(pal[[key_col]])
-  out
+  named_palette(out)
 }
 
 validate_palette <- function(values, palette, allow_extra = TRUE) {
   palette <- named_palette(palette)
+  if (is.null(palette)) stop("palette must not be NULL.", call. = FALSE)
+  if (anyNA(values) || any(!nzchar(trimws(as.character(values))))) {
+    stop("values must not contain missing or blank categories.", call. = FALSE)
+  }
   values <- sort(unique(as.character(values)))
   missing <- setdiff(values, names(palette))
   if (length(missing) > 0) {

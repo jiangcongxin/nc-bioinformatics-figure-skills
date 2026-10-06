@@ -1,6 +1,6 @@
 plot_sc_embedding_panel <- function(data, color_col = "cell_type", palette = NULL,
                                     point_size = 0.45, alpha = 0.85,
-                                    label = TRUE, title = NULL) {
+                                    label = TRUE, title = NULL, cell_type_order = NULL) {
   check_sc_columns(data, c("x", "y", color_col), "embedding data")
   ncfigR::plot_embedding_panel(
     data = data,
@@ -9,7 +9,8 @@ plot_sc_embedding_panel <- function(data, color_col = "cell_type", palette = NUL
     point_size = point_size,
     alpha = alpha,
     label = label,
-    title = title
+    title = title,
+    category_order = cell_type_order
   )
 }
 
@@ -18,7 +19,7 @@ plot_cell_fraction_panel <- function(data, group_col = "group",
                                      value_col = "proportion",
                                      palette = NULL,
                                      position = c("fill", "stack", "dodge"),
-                                     title = NULL) {
+                                     title = NULL, cell_type_order = NULL, group_order = NULL) {
   position <- match.arg(position)
   check_sc_columns(data, c(group_col, category_col, value_col), "cell fraction data")
   ncfigR::plot_composition_panel(
@@ -28,7 +29,9 @@ plot_cell_fraction_panel <- function(data, group_col = "group",
     value_col = value_col,
     palette = palette,
     position = position,
-    title = title
+    title = title,
+    category_order = cell_type_order,
+    group_order = group_order
   )
 }
 
@@ -37,14 +40,29 @@ plot_marker_dotplot_panel <- function(data, feature_col = "feature",
                                       expression_col = "avg_expression",
                                       percent_col = "pct_expression",
                                       expression_limits = NULL,
-                                      title = NULL) {
-  check_sc_columns(
+                                      title = NULL, cell_type_order = NULL, feature_order = NULL,
+                                      marker_groups = NULL, data.out = FALSE) {
+  sc_check_data_out(data.out)
+  ncfigR::validate_panel_data(
     data,
     c(feature_col, cell_type_col, expression_col, percent_col),
-    "marker dotplot data"
+    c(expression_col, percent_col), c(feature_col, cell_type_col), "marker dotplot data"
   )
+  if (any(data[[percent_col]] < 0 | data[[percent_col]] > 1)) {
+    stop("pct_expression must be a fraction in [0, 1], not a percentage in [0, 100].", call. = FALSE)
+  }
+  if (!is.null(expression_limits) && (!is.numeric(expression_limits) ||
+      length(expression_limits) != 2L || any(!is.finite(expression_limits)) ||
+      expression_limits[1] >= expression_limits[2])) {
+    stop("expression_limits must be two finite increasing numbers.", call. = FALSE)
+  }
+  grouped <- sc_group_markers(data, feature_col, feature_order, marker_groups)
+  data <- grouped$data
+  feature_order <- grouped$features
+  data[[cell_type_col]] <- sc_order(data[[cell_type_col]], cell_type_order, "cell_type_order")
+  data[[feature_col]] <- sc_order(data[[feature_col]], feature_order, "feature_order")
 
-  ggplot2::ggplot(
+  p <- ggplot2::ggplot(
     data,
     ggplot2::aes(
       x = .data[[cell_type_col]],
@@ -54,8 +72,9 @@ plot_marker_dotplot_panel <- function(data, feature_col = "feature",
     )
   ) +
     ggplot2::geom_point(alpha = 0.9) +
-    ggplot2::scale_size_continuous(
-      range = c(0.5, 4),
+    ggplot2::scale_size_area(
+      max_size = 4,
+      limits = c(0, 1),
       labels = scales::percent_format(accuracy = 1),
       name = percent_col
     ) +
@@ -70,6 +89,9 @@ plot_marker_dotplot_panel <- function(data, feature_col = "feature",
     ggplot2::labs(title = title, x = NULL, y = NULL) +
     ncfigR::nc_theme() +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
+  if (!is.null(marker_groups)) p <- p +
+    ggplot2::facet_grid(rows = ggplot2::vars(.data$marker_group), scales = "free_y", space = "free_y")
+  if (data.out) list(plot = p, data = data) else p
 }
 
 plot_module_score_panel <- function(data, score_col = "score",
@@ -89,6 +111,9 @@ plot_module_score_panel <- function(data, score_col = "score",
     required <- c(required, facet_col)
   }
   check_sc_columns(data, required, "module score data")
+  ncfigR::validate_panel_data(data, required,
+    if (mode == "embedding") c(score_col, x_col, y_col) else score_col,
+    data_name = "module score data")
 
   if (mode == "embedding") {
     p <- ggplot2::ggplot(
@@ -114,7 +139,7 @@ plot_module_score_panel <- function(data, score_col = "score",
   }
 
   if (!is.null(facet_col)) {
-    p <- p + ggplot2::facet_wrap(stats::as.formula(paste("~", facet_col)))
+    p <- p + ggplot2::facet_wrap(ggplot2::vars(.data[[facet_col]]))
   }
   p
 }
@@ -123,22 +148,50 @@ compose_sc_atlas_figure <- function(embedding, composition, markers,
                                     module_scores = NULL,
                                     palette = NULL,
                                     embedding_color_col = "cell_type",
-                                    title = "Single-cell atlas overview") {
+                                    title = "Single-cell atlas overview",
+                                    cell_type_order = NULL, feature_order = NULL,
+                                    group_order = NULL, labels = "AUTO",
+                                    marker_groups = NULL, data.out = FALSE) {
+  sc_check_data_out(data.out)
+  check_sc_columns(embedding, c("x", "y", embedding_color_col), "embedding data")
+  check_sc_columns(composition, c("group", "cell_type", "proportion"), "composition data")
+  check_sc_columns(markers, c("feature", "cell_type", "avg_expression", "pct_expression"), "marker data")
+  cell_types <- levels(sc_order(embedding[[embedding_color_col]], cell_type_order, "cell_type_order"))
+  for (data in list(composition, markers)) {
+    if (!setequal(as.character(data$cell_type), as.character(embedding[[embedding_color_col]]))) {
+      stop("embedding, composition, and markers must use the same cell-type categories.", call. = FALSE)
+    }
+  }
+  if (is.null(palette)) palette <- ncfigR::read_nc_palette(data.frame(
+    cell_type = cell_types,
+    color = if (length(cell_types) <= 8L) {
+      c("#0072B2", "#E69F00", "#009E73", "#CC79A7", "#56B4E9", "#D55E00", "#000000", "#F0E442")[seq_along(cell_types)]
+    } else grDevices::hcl.colors(length(cell_types), "Dark 3")
+  ))
   p_embedding <- plot_sc_embedding_panel(
     embedding,
     color_col = embedding_color_col,
     palette = palette,
-    title = "Embedding"
+    title = "Embedding", cell_type_order = cell_types
   )
   p_fraction <- plot_cell_fraction_panel(
     composition,
     palette = palette,
-    title = "Cell fraction"
+    title = "Cell fraction", cell_type_order = cell_types, group_order = group_order
   )
   p_markers <- plot_marker_dotplot_panel(
     markers,
-    title = "Marker program"
+    title = "Marker program", cell_type_order = cell_types, feature_order = feature_order,
+    marker_groups = marker_groups, data.out = TRUE
   )
+  marker_data <- p_markers$data
+  p_markers <- p_markers$plot
+  p_embedding <- p_embedding + ggplot2::theme(legend.position = "none")
+  p_fraction <- p_fraction + ggplot2::labs(y = "Cell fraction") +
+    ggplot2::guides(fill = ggplot2::guide_legend(title = "Cell type"))
+  p_markers <- p_markers + ggplot2::guides(
+    size = ggplot2::guide_legend(title = "Expressing cells"),
+    colour = ggplot2::guide_colourbar(title = "Mean expression"))
 
   panels <- list(p_embedding, p_fraction, p_markers)
   if (!is.null(module_scores)) {
@@ -148,5 +201,8 @@ compose_sc_atlas_figure <- function(embedding, composition, markers,
     )
   }
 
-  ncfigR::compose_nc_figure(panels, ncol = 2, title = title)
+  figure <- ncfigR::compose_nc_figure(panels, ncol = 2, labels = labels, title = title,
+    design = if (length(panels) == 3L) "AB\nCC" else NULL)
+  if (data.out) list(plot = figure, data = list(embedding = embedding, composition = composition,
+    markers = marker_data, module_scores = module_scores, palette = palette)) else figure
 }
