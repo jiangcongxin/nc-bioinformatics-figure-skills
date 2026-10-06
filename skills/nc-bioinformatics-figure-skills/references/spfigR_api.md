@@ -1,5 +1,17 @@
 # spfigR API
 
+## Checked overview task (0.2.1)
+
+For section-aware tasks read [spatial_execution.md](spatial_execution.md) first.
+`prepare_spatial_data()` validates canonical coordinate/feature/ROI tables and
+derives per-section spot fractions. `compose_spatial_overview()` draws separate
+sections with declared units, y direction and shared feature limits.
+`run_sp_job()` exports a frozen, reviewable run; `review_sp_job()` records six
+evidence-backed PNG/vector checks through ncfigR. Use the CLI for version checking.
+
+The panel APIs below retain their legacy table schemas; they do not provide the
+overview task's multi-section matching and execution/review contract.
+
 Purpose: `spfigR` is the second domain package built from the NC GitHub code-learning pipeline. It implements a source-data-first spatial tissue niche figure MVP and uses `ncfigR` for shared theme, palette, composition, and export behavior.
 
 ## Package Location

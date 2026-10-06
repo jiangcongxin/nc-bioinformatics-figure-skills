@@ -1,8 +1,13 @@
 # NC Bioinformatics Figure Skills
 
-本地 Codex skill：从 Nature Communications 优先、GitHub 代码可追踪的生信/组学论文中学习 figure 可视化思维，并围绕自己的研究项目沉淀成可复用绘图 skills。
+本地 Codex skill：调用 R 包绘制已有单细胞结果，检查图件、保留源数据，并根据报告修正。
 
-当前版本优先服务“Figure Decision + Visual QA + Project Scaffold + NC GitHub Mining + R Package Router + Code Learning Deep Dive + ncfigR + scfigR + spfigR + commfigR + trajfigR + benchfigR + multiomfigR”：先判断主图该放什么和怎么画，再审稿式检查视觉问题，然后把可复用绘图目录、palette、source data manifest、脚本骨架、GitHub 代码模式、R 包路由和 R 优先绘图函数沉淀到项目里。
+2.5 版默认运行单细胞 atlas 任务；通讯和空间结果分别按需加载
+[通讯入口](references/communication_execution.md)和[空间入口](references/spatial_execution.md)。
+完整调用规则以 [SKILL.md](SKILL.md) 为准。轨迹、benchmark 和多组学仍是早期原型。
+
+下面保留的知识库与历史调用示例是可选参考，不代表所有模块都已通过任务级验证，
+也不代表技术检查通过就达到了特定期刊的发表标准。
 
 ## 能做什么
 

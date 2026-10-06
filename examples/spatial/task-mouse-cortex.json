@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "task": "spatial_overview",
+  "job_id": "mouse-cortex-spatial",
+  "inputs": {
+    "coordinates": "cache/coordinates.tsv",
+    "features": "cache/features.tsv",
+    "regions": "cache/regions.tsv",
+    "expression_scale": "log_normalized",
+    "coordinate_unit": "pixel",
+    "y_axis": "down",
+    "provenance": "Suoqin Jin (2023), doi:10.6084/m9.figshare.24516436.v1, CC BY 4.0; existing SCT normalized values and Seurat-derived labels. Export x=stored y_cent, y=stored x_cent follows CellChat spatialFeaturePlot. ROI-1 is a demonstration rectangle, not an anatomical niche."
+  },
+  "figure": {"width_mm": 183, "height_mm": 220, "point_size": 0.7, "feature_order": ["Igf1", "Igf1r", "Tgfb1"]},
+  "output_dir": "job-runs"
+}

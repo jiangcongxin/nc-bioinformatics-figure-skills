@@ -1,7 +1,7 @@
 plot_lr_heatmap_panel <- function(data, source_col = "source", target_col = "target",
                                   value_col = "score", ligand_col = "ligand",
                                   receptor_col = "receptor", condition_col = NULL,
-                                  title = NULL) {
+                                  title = NULL, color_style = "balanced") {
   required <- c(source_col, target_col, value_col)
   if (!is.null(condition_col)) {
     required <- c(required, condition_col)
@@ -17,14 +17,14 @@ plot_lr_heatmap_panel <- function(data, source_col = "source", target_col = "tar
   ggplot2::ggplot(data, ggplot2::aes(.data$cell_pair, .data$lr_pair, fill = .data[[value_col]])) +
     ggplot2::geom_tile(colour = "white", linewidth = 0.2) +
     ggplot2::facet_wrap(~condition) +
-    ggplot2::scale_fill_viridis_c(option = "D", name = value_col) +
+    ncfigR::nc_continuous_scale("fill", color_style, name = value_col) +
     ggplot2::labs(title = title, x = "Sender -> receiver", y = NULL) + ncfigR::nc_theme() +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1))
 }
 
 plot_lr_network_panel <- function(data, source_col = "source", target_col = "target",
                                   value_col = "score", top_n = 30,
-                                  title = NULL) {
+                                  title = NULL, color_style = "balanced") {
   check_comm_columns(data, c(source_col, target_col, value_col), "network data")
   comm_numeric(data, value_col, c(0, Inf))
   top_by_abs(data, value_col, top_n)
@@ -41,7 +41,7 @@ plot_lr_network_panel <- function(data, source_col = "source", target_col = "tar
     target_col = target_col,
     value_col = value_col,
     top_n = top_n,
-    title = title
+    title = title, color_style = color_style
   )
 }
 
@@ -50,7 +50,7 @@ plot_sender_receiver_score_panel <- function(data, source_col = "source",
                                              score_col = "score",
                                              score_type_col = "score_type",
                                              condition_col = NULL,
-                                             title = NULL) {
+                                             title = NULL, color_style = "balanced") {
   required <- c(source_col, target_col, score_col, score_type_col)
   if (!is.null(condition_col)) {
     required <- c(required, condition_col)
@@ -66,7 +66,7 @@ plot_sender_receiver_score_panel <- function(data, source_col = "source",
     ggplot2::aes(x = .data[[score_type_col]], y = .data$pair, colour = .data[[score_col]], size = .data[[score_col]])
   ) +
     ggplot2::geom_point(alpha = 0.9) +
-    ggplot2::scale_colour_viridis_c(option = "C", name = score_col) +
+    ncfigR::nc_continuous_scale(color_style = color_style, name = score_col) +
     ggplot2::scale_size_continuous(range = c(1, 4), guide = "none") +
     ggplot2::labs(title = title, x = NULL, y = NULL) +
     ncfigR::nc_theme()
@@ -82,7 +82,7 @@ plot_differential_communication_panel <- function(data, source_col = "source",
                                                   logfc_col = "logFC",
                                                   p_col = "p_adj",
                                                   top_n = 20,
-                                                  title = NULL) {
+                                                  title = NULL, color_style = "balanced") {
   check_comm_columns(
     data,
     c(source_col, target_col, ligand_col, receptor_col, logfc_col, p_col),
@@ -108,7 +108,7 @@ plot_differential_communication_panel <- function(data, source_col = "source",
       linewidth = 0.35
     ) +
     ggplot2::geom_point(ggplot2::aes(size = .data$rank_value, colour = .data[[logfc_col]]), alpha = 0.9) +
-    ggplot2::scale_colour_gradient2(low = "#3B4CC0", mid = "white", high = "#B40426", midpoint = 0, name = logfc_col) +
+    ncfigR::nc_continuous_scale(color_style = color_style, signed = TRUE, name = logfc_col) +
     ggplot2::scale_size_continuous(range = c(1, 4), name = paste0("-log10(", p_col, ")")) +
     ggplot2::labs(title = title, x = logfc_col, y = NULL) +
     ncfigR::nc_theme()
@@ -118,9 +118,9 @@ compose_communication_figure <- function(lr_pairs,
                                          communication_scores,
                                          differential_lr = NULL,
                                          network_edges = NULL,
-                                         title = "Cell-cell communication overview") {
-  p_heatmap <- plot_lr_heatmap_panel(lr_pairs, title = "LR heatmap")
-  p_scores <- plot_sender_receiver_score_panel(communication_scores, title = "Sender / receiver score")
+                                         title = "Cell-cell communication overview", color_style = "balanced") {
+  p_heatmap <- plot_lr_heatmap_panel(lr_pairs, title = "LR heatmap", color_style = color_style)
+  p_scores <- plot_sender_receiver_score_panel(communication_scores, title = "Sender / receiver score", color_style = color_style)
 
   if (is.null(network_edges)) {
     if ("condition" %in% names(lr_pairs) && length(unique(lr_pairs$condition)) > 1L) {
@@ -128,17 +128,17 @@ compose_communication_figure <- function(lr_pairs,
     }
     network_edges <- as.data.frame(dplyr::summarise(
       dplyr::group_by(lr_pairs, .data$source, .data$target), score = sum(.data$score), .groups = "drop"))
-    p_network <- plot_lr_network_panel(network_edges, value_col = "score", title = "Filtered network")
+    p_network <- plot_lr_network_panel(network_edges, value_col = "score", title = "Filtered network", color_style = color_style)
   } else {
     network_value_col <- if ("weight" %in% names(network_edges)) "weight" else "score"
-    p_network <- plot_lr_network_panel(network_edges, value_col = network_value_col, title = "Filtered network")
+    p_network <- plot_lr_network_panel(network_edges, value_col = network_value_col, title = "Filtered network", color_style = color_style)
   }
 
   panels <- list(p_heatmap, p_network, p_scores)
   if (!is.null(differential_lr)) {
     panels <- c(
       panels,
-      list(plot_differential_communication_panel(differential_lr, title = "Differential LR"))
+      list(plot_differential_communication_panel(differential_lr, title = "Differential LR", color_style = color_style))
     )
   }
 

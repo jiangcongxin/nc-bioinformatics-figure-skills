@@ -12,6 +12,8 @@
 Source-data-first R functions for training and generating NC-style single-cell atlas overview figures.
 }
 \arguments{
+\item{color_style}{Coordinated color style used by the atlas composer.}
+\item{feature_palette}{Optional sequential scico palette for atlas marker means.}
 \item{data}{A source-data data frame for one panel.}
 \item{color_col}{Column used to color embedding points.}
 \item{palette}{Named color vector or palette data frame.}
@@ -45,25 +47,26 @@ Source-data-first R functions for training and generating NC-style single-cell a
 }
 \usage{
 plot_sc_embedding_panel(data, color_col = "cell_type", palette = NULL,
-  point_size = 0.45, alpha = 0.85, label = TRUE, title = NULL, cell_type_order = NULL)
+  point_size = 0.45, alpha = 0.85, label = TRUE, title = NULL, cell_type_order = NULL, color_style = "balanced")
 
 plot_cell_fraction_panel(data, group_col = "group", category_col = "cell_type",
   value_col = "proportion", palette = NULL, position = c("fill", "stack", "dodge"),
-  title = NULL, cell_type_order = NULL, group_order = NULL)
+  title = NULL, cell_type_order = NULL, group_order = NULL, color_style = "balanced")
 
 plot_marker_dotplot_panel(data, feature_col = "feature", cell_type_col = "cell_type",
   expression_col = "avg_expression", percent_col = "pct_expression",
   expression_limits = NULL, title = NULL, cell_type_order = NULL, feature_order = NULL,
-  marker_groups = NULL, data.out = FALSE)
+  marker_groups = NULL, data.out = FALSE, color_style = "balanced")
 
 plot_module_score_panel(data, score_col = "score", mode = c("embedding", "violin"),
-  x_col = "x", y_col = "y", group_col = "group", facet_col = NULL, title = NULL)
+  x_col = "x", y_col = "y", group_col = "group", facet_col = NULL, title = NULL, color_style = "balanced")
 
 compose_sc_atlas_figure(embedding, composition, markers, module_scores = NULL,
   palette = NULL, embedding_color_col = "cell_type",
   title = "Single-cell atlas overview", cell_type_order = NULL,
   feature_order = NULL, group_order = NULL, labels = "AUTO",
-  marker_groups = NULL, data.out = FALSE)
+  marker_groups = NULL, data.out = FALSE, color_style = "balanced",
+  feature_palette = NULL)
 }
 \details{
 The package builds on \pkg{ncfigR} for shared theme, palette, composition, and export behavior.

@@ -1,6 +1,6 @@
 Package: multiomfigR
 Title: NC-Style Multi-Omics Integration Figure Toolkit
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: person(given = "Jiang", family = "Congxin", role = c("aut", "cre"), email = "jcx981212@163.com")
 Author: Jiang Congxin
 Maintainer: Jiang Congxin <jcx981212@163.com>
@@ -12,10 +12,11 @@ RoxygenNote: 7.3.2
 Depends:
     R (>= 4.1.0)
 Imports:
-    ncfigR,
+    ncfigR (>= 0.3.0),
     ggplot2,
     rlang
 Suggests:
+    patchwork,
     readr,
     testthat (>= 3.0.0),
     knitr,

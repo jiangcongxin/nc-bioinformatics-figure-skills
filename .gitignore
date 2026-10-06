@@ -15,3 +15,5 @@ examples/single-cell/job-runs/
 .r-library/
 examples/communication/cache/
 examples/communication/job-runs/
+examples/spatial/cache/
+examples/spatial/job-runs/

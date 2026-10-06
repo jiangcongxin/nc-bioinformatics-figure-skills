@@ -20,7 +20,8 @@ plot_integration_embedding_panel(
   point_size = 0.65,
   alpha = 0.85,
   label = TRUE,
-  title = NULL
+  title = NULL,
+  color_style = "balanced"
 )
 
 plot_modality_metric_panel(
@@ -29,7 +30,8 @@ plot_modality_metric_panel(
   dataset_col = "dataset",
   metric_col = "metric",
   value_col = "value",
-  title = NULL
+  title = NULL,
+  color_style = "balanced"
 )
 
 plot_cross_dataset_validation_panel(
@@ -38,7 +40,8 @@ plot_cross_dataset_validation_panel(
   target_col = "target_dataset",
   metric_col = "metric",
   value_col = "value",
-  title = NULL
+  title = NULL,
+  color_style = "balanced"
 )
 
 plot_feature_link_panel(
@@ -47,7 +50,8 @@ plot_feature_link_panel(
   target_col = "target_feature",
   weight_col = "weight",
   top_n = 30,
-  title = NULL
+  title = NULL,
+  color_style = "balanced"
 )
 
 plot_pathway_program_panel(
@@ -55,7 +59,8 @@ plot_pathway_program_panel(
   program_col = "program",
   group_col = "group",
   value_col = "score",
-  title = NULL
+  title = NULL,
+  color_style = "balanced"
 )
 
 compose_multiomics_figure(
@@ -64,10 +69,12 @@ compose_multiomics_figure(
   cross_dataset_validation,
   feature_links,
   pathway_programs,
-  title = "Multi-omics integration overview"
+  title = "Multi-omics integration overview",
+  color_style = "balanced"
 )
 }
 \arguments{
+\item{color_style}{Coordinated style: balanced, muted, vivid or okabe_ito.}
 \item{data}{A data frame containing the required source-data columns for one panel.}
 \item{x_col, y_col}{Columns for embedding coordinates.}
 \item{color_col}{Column for discrete embedding colours.}

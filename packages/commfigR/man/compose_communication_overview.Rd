@@ -12,7 +12,11 @@ compose_communication_overview(
   title = NULL,
   data.out = FALSE,
   max_pairs = 16,
-  network_top_n = 20
+  network_top_n = 20,
+  color_style = "balanced",
+  feature_palette = NULL,
+  palette = NULL,
+  condition_palette = NULL
 )
 }
 \arguments{
@@ -31,6 +35,14 @@ compose_communication_overview(
 \item{max_pairs}{Display-only maximum sender-receiver pairs (1-40).}
 
 \item{network_top_n}{Display-only top sender-receiver edges per condition.}
+
+\item{color_style}{Coordinated color style.}
+
+\item{feature_palette}{Optional sequential scico score palette.}
+
+\item{palette}{Optional named cell-type colors.}
+
+\item{condition_palette}{Optional named condition colors, separate from cell types.}
 }
 \value{
 A patchwork plot, or list(plot, data) when data.out is TRUE.

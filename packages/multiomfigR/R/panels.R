@@ -5,7 +5,7 @@ plot_integration_embedding_panel <- function(data, x_col = "x", y_col = "y",
                                              point_size = 0.65,
                                              alpha = 0.85,
                                              label = TRUE,
-                                             title = NULL) {
+                                             title = NULL, color_style = "balanced") {
   required <- c(x_col, y_col, color_col)
   if (!is.null(shape_col)) {
     required <- c(required, shape_col)
@@ -17,7 +17,7 @@ plot_integration_embedding_panel <- function(data, x_col = "x", y_col = "y",
   names(plot_data)[names(plot_data) == y_col] <- "y"
   palette <- as_named_palette(palette)
   if (is.null(palette)) {
-    palette <- default_multiom_palette(plot_data[[color_col]])
+    palette <- default_multiom_palette(plot_data[[color_col]], color_style)
   } else {
     ncfigR::validate_palette(plot_data[[color_col]], palette)
   }
@@ -60,7 +60,7 @@ plot_modality_metric_panel <- function(data, modality_col = "modality",
                                        dataset_col = "dataset",
                                        metric_col = "metric",
                                        value_col = "value",
-                                       title = NULL) {
+                                       title = NULL, color_style = "balanced") {
   check_multiom_columns(
     data,
     c(modality_col, dataset_col, metric_col, value_col),
@@ -72,7 +72,7 @@ plot_modality_metric_panel <- function(data, modality_col = "modality",
     dataset_col = dataset_col,
     metric_col = metric_col,
     value_col = value_col,
-    title = title
+    title = title, color_style = color_style
   )
 }
 
@@ -80,7 +80,7 @@ plot_cross_dataset_validation_panel <- function(data, source_col = "source_datas
                                                 target_col = "target_dataset",
                                                 metric_col = "metric",
                                                 value_col = "value",
-                                                title = NULL) {
+                                                title = NULL, color_style = "balanced") {
   check_multiom_columns(
     data,
     c(source_col, target_col, metric_col, value_col),
@@ -92,7 +92,7 @@ plot_cross_dataset_validation_panel <- function(data, source_col = "source_datas
     ggplot2::aes(x = .data[[target_col]], y = .data[[source_col]], fill = .data[[value_col]])
   ) +
     ggplot2::geom_tile(colour = "white", linewidth = 0.2) +
-    ggplot2::scale_fill_viridis_c(option = "C", name = value_col) +
+    ncfigR::nc_continuous_scale("fill", color_style, name = value_col) +
     ggplot2::labs(title = title, x = "target", y = "source") +
     ncfigR::nc_theme() +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
@@ -104,7 +104,7 @@ plot_feature_link_panel <- function(data, source_col = "source_feature",
                                     target_col = "target_feature",
                                     weight_col = "weight",
                                     top_n = 30,
-                                    title = NULL) {
+                                    title = NULL, color_style = "balanced") {
   check_multiom_columns(data, c(source_col, target_col, weight_col), "feature link data")
   ncfigR::plot_lr_network(
     data = data,
@@ -112,21 +112,21 @@ plot_feature_link_panel <- function(data, source_col = "source_feature",
     target_col = target_col,
     value_col = weight_col,
     top_n = top_n,
-    title = title
+    title = title, color_style = color_style
   )
 }
 
 plot_pathway_program_panel <- function(data, program_col = "program",
                                        group_col = "group",
                                        value_col = "score",
-                                       title = NULL) {
+                                       title = NULL, color_style = "balanced") {
   check_multiom_columns(data, c(program_col, group_col, value_col), "pathway program data")
   ncfigR::plot_marker_heatmap(
     data = data,
     row_col = program_col,
     col_col = group_col,
     value_col = value_col,
-    title = title
+    title = title, color_style = color_style
   )
 }
 
@@ -135,13 +135,13 @@ compose_multiomics_figure <- function(integration_embedding,
                                       cross_dataset_validation,
                                       feature_links,
                                       pathway_programs,
-                                      title = "Multi-omics integration overview") {
+                                      title = "Multi-omics integration overview", color_style = "balanced") {
   panels <- list(
-    plot_integration_embedding_panel(integration_embedding, title = "Integrated embedding"),
-    plot_modality_metric_panel(modality_metrics, title = "Modality metrics"),
-    plot_cross_dataset_validation_panel(cross_dataset_validation, title = "Cross-dataset validation"),
-    plot_feature_link_panel(feature_links, title = "Regulatory / feature links"),
-    plot_pathway_program_panel(pathway_programs, title = "Pathway / program panel")
+    plot_integration_embedding_panel(integration_embedding, title = "Integrated embedding", color_style = color_style),
+    plot_modality_metric_panel(modality_metrics, title = "Modality metrics", color_style = color_style),
+    plot_cross_dataset_validation_panel(cross_dataset_validation, title = "Cross-dataset validation", color_style = color_style),
+    plot_feature_link_panel(feature_links, title = "Regulatory / feature links", color_style = color_style),
+    plot_pathway_program_panel(pathway_programs, title = "Pathway / program panel", color_style = color_style)
   )
   ncfigR::compose_nc_figure(panels, ncol = 2, title = title)
 }

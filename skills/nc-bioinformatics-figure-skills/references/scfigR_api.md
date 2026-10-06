@@ -1,6 +1,12 @@
 # scfigR API
 
-Current package version: **0.3.1**. Use [single_cell_execution.md](single_cell_execution.md) for the fixed task runner and report/review protocol. Start with the [single-cell guide](../../../examples/single-cell/README.md) for direct R plotting and PBMC3k examples.
+Current package version: **0.4.0**. Use [single_cell_execution.md](single_cell_execution.md) for the fixed task runner and report/review protocol. Start with the [single-cell guide](../../../examples/single-cell/README.md) for direct R plotting and PBMC3k examples.
+
+Both atlas composers accept `color_style` and optional sequential `feature_palette`.
+Publication layouts also accept `marker_palette`, which must be diverging for
+gene z-scores and sequential for raw expression. Named category palettes override
+presets. Task outputs freeze resolved colors; style changes must preserve source
+values, filters, marker grouping and statistical scale definitions.
 
 Marker and atlas functions support optional `marker_groups` and `data.out = TRUE`.
 The latter returns `list(plot, data)`; default plot returns are unchanged. Named

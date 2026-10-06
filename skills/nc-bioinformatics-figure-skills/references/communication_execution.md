@@ -1,8 +1,8 @@
 # Existing Communication Results
 
 Use this module for `communication_overview`, not raw expression or new
-CellChat/CellPhoneDB/NicheNet inference. The locked runtime is ncfigR 0.2.2,
-scfigR 0.3.1 and commfigR 0.2.0. Check `scripts/check_runtime.R` first.
+CellChat/CellPhoneDB/NicheNet inference. The locked runtime is ncfigR 0.3.0,
+scfigR 0.4.0 and commfigR 0.3.0. Check `scripts/check_runtime.R` first.
 
 ## Inputs and Decisions
 

@@ -16,7 +16,8 @@ plot_metric_heatmap_panel(
   dataset_col = "dataset",
   metric_col = "metric",
   value_col = "value",
-  title = NULL
+  title = NULL,
+  color_style = "balanced"
 )
 
 plot_rank_panel(
@@ -25,7 +26,8 @@ plot_rank_panel(
   metric_col = "metric",
   rank_col = "rank",
   value_col = NULL,
-  title = NULL
+  title = NULL,
+  color_style = "balanced"
 )
 
 plot_runtime_panel(
@@ -34,7 +36,9 @@ plot_runtime_panel(
   dataset_col = "dataset",
   runtime_col = "runtime_sec",
   memory_col = NULL,
-  title = NULL
+  title = NULL,
+  color_style = "balanced",
+  palette = NULL
 )
 
 plot_robustness_panel(
@@ -43,7 +47,9 @@ plot_robustness_panel(
   perturbation_col = "perturbation",
   metric_col = "metric",
   value_col = "value",
-  title = NULL
+  title = NULL,
+  color_style = "balanced",
+  palette = NULL
 )
 
 plot_case_embedding_panel(
@@ -55,7 +61,8 @@ plot_case_embedding_panel(
   palette = NULL,
   point_size = 0.6,
   alpha = 0.85,
-  title = NULL
+  title = NULL,
+  color_style = "balanced"
 )
 
 compose_benchmark_case_figure(
@@ -64,10 +71,12 @@ compose_benchmark_case_figure(
   runtime_metrics,
   robustness_metrics,
   case_embedding,
-  title = "Benchmark and biological case"
+  title = "Benchmark and biological case",
+  color_style = "balanced"
 )
 }
 \arguments{
+\item{color_style}{Coordinated style: balanced, muted, vivid or okabe_ito.}
 \item{data}{A data frame containing the required source-data columns for one panel.}
 \item{method_col}{Column containing method names.}
 \item{dataset_col}{Column containing dataset or benchmark scenario names.}
@@ -81,7 +90,7 @@ compose_benchmark_case_figure(
 \item{x_col, y_col}{Columns for case embedding coordinates.}
 \item{label_col}{Column containing case labels, such as cell state or domain.}
 \item{score_col}{Optional continuous score column for case colouring.}
-\item{palette}{Named colour vector for case labels.}
+\item{palette}{Named colour vector for case labels or method names, depending on the panel.}
 \item{point_size, alpha}{Point size and transparency controls.}
 \item{benchmark_metrics}{Source-data table for metric heatmaps.}
 \item{benchmark_ranks}{Source-data table for rank summaries.}

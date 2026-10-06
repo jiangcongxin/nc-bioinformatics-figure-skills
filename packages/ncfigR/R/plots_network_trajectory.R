@@ -1,6 +1,6 @@
 plot_lr_network <- function(data, source_col = "source", target_col = "target",
                             value_col = "score", top_n = 30,
-                            title = NULL) {
+                            title = NULL, color_style = "balanced") {
   check_columns(data, c(source_col, target_col, value_col), "ligand-receptor data")
   edges <- data |>
     dplyr::group_by(.data[[source_col]], .data[[target_col]]) |>
@@ -16,7 +16,8 @@ plot_lr_network <- function(data, source_col = "source", target_col = "target",
       arrow = grid::arrow(length = grid::unit(2, "mm")),
       end_cap = ggraph::circle(3, "mm")
     ) +
-    ggraph::geom_node_point(size = 4, colour = "#4C78A8") +
+    ggraph::geom_node_point(ggplot2::aes(colour = .data$name), size = 4) +
+    ggplot2::scale_colour_manual(values = nc_color_scheme(igraph::V(graph)$name, color_style)$colors, guide = "none") +
     ggraph::geom_node_text(ggplot2::aes(label = .data$name), repel = TRUE, size = 2.8) +
     ggraph::scale_edge_width(range = c(0.2, 1.8), guide = "none") +
     ggplot2::labs(title = title) +

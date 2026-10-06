@@ -23,18 +23,19 @@ nc_theme(base_size = 8, base_family = "sans")
 read_nc_palette(x, key_col = NULL, color_col = "color")
 validate_palette(values, palette, allow_extra = TRUE)
 as_panel_data(x, type = c("embedding", "metadata", "expression"), ...)
-plot_embedding_panel(data, color_col = "cell_type", palette = NULL, point_size = 0.5, alpha = 0.85, label = FALSE, title = NULL, category_order = NULL)
-plot_composition_panel(data, group_col = "group", category_col = "cell_type", value_col = "proportion", palette = NULL, position = c("fill", "stack", "dodge"), title = NULL, category_order = NULL, group_order = NULL, value_type = c("proportion", "count"))
-plot_marker_heatmap(data, row_col = "feature", col_col = "cell_type", value_col = "value", fill_limits = NULL, title = NULL)
-plot_lr_heatmap(data, source_col = "source", target_col = "target", value_col = "score", title = NULL)
-plot_lr_network(data, source_col = "source", target_col = "target", value_col = "score", top_n = 30, title = NULL)
+plot_embedding_panel(data, color_col = "cell_type", palette = NULL, point_size = 0.5, alpha = 0.85, label = FALSE, title = NULL, category_order = NULL, color_style = "balanced")
+plot_composition_panel(data, group_col = "group", category_col = "cell_type", value_col = "proportion", palette = NULL, position = c("fill", "stack", "dodge"), title = NULL, category_order = NULL, group_order = NULL, value_type = c("proportion", "count"), color_style = "balanced")
+plot_marker_heatmap(data, row_col = "feature", col_col = "cell_type", value_col = "value", fill_limits = NULL, title = NULL, color_style = "balanced")
+plot_lr_heatmap(data, source_col = "source", target_col = "target", value_col = "score", title = NULL, color_style = "balanced")
+plot_lr_network(data, source_col = "source", target_col = "target", value_col = "score", top_n = 30, title = NULL, color_style = "balanced")
 plot_trajectory_trend(data, pseudotime_col = "pseudotime", value_col = "value", feature_col = "feature", group_col = NULL, title = NULL)
-plot_benchmark_heatmap(data, method_col = "method", dataset_col = "dataset", value_col = "value", metric_col = NULL, title = NULL)
+plot_benchmark_heatmap(data, method_col = "method", dataset_col = "dataset", value_col = "value", metric_col = NULL, title = NULL, color_style = "balanced")
 compose_nc_figure(panels, ncol = NULL, labels = "AUTO", title = NULL, design = NULL,
   widths = NULL, heights = NULL, guides = c("auto", "collect", "keep"))
 export_figure_bundle(plot, basename, out_dir = "figures/exports", width = 7, height = 5, source_manifest = NULL, overwrite = TRUE)
 }
 \arguments{
+\item{color_style}{Coordinated style: balanced, muted, vivid or okabe_ito.}
 \item{x, data, values, palette, panels, plot}{Input object, source-data table, palette, panel list, or plot object.}
 \item{type}{Panel-data adapter type.}
 \item{...}{Additional adapter arguments.}

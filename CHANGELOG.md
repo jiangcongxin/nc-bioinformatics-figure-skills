@@ -1,5 +1,39 @@
 # Changes
 
+## Skill 2.5.0 / Shared plotting styles
+
+- Move coordinated colors and the cowplot theme into ncfigR 0.3.0.
+- Upgrade scfigR 0.4.0 and commfigR 0.3.0 task outputs with named categorical
+  colors, continuous color stops, color-vision previews and palette attribution.
+- Preserve input values, statistical definitions, filters and explicit palettes;
+  freeze resolved display settings for reproduction. Keep commfigR-v0.2.0 intact.
+- Use the shared resolver in spfigR 0.2.2. Add style arguments to trajfigR,
+  benchfigR and multiomfigR 0.1.1 panel APIs without promoting them to checked tasks.
+- Add real-data style comparisons and broaden package checks to all seven packages.
+
+## spfigR 0.2.1
+
+- Use cowplot's theme, colorspace categorical palettes/CVD simulations and scico
+  continuous palettes through public APIs as the spatial plotting base.
+- Add balanced, muted, vivid and Okabe-Ito styles, independently selectable feature
+  palettes, strict sequential/diverging semantics and explicit category capacity.
+- Freeze categorical colors, continuous color stops and CVD preview values;
+  record plotting dependency versions without changing scientific source values.
+- Add a real-data style comparison and document upstream roles and licenses.
+
+## Skill 2.4.0 / spfigR 0.2.0
+
+- Add a section-aware spatial overview task with complete spot-feature tables,
+  explicit units/orientation, shared scales, consistent annotation colors and ROI zooms.
+- Derive annotated spot fractions per section; retain absent categories with zeros
+  and keep ROI selection separate from composition denominators.
+- Export frozen inputs, exact plotting values, methods, reproduction config and
+  JSON checks; use the shared task-bound review gate for inspected artwork.
+- Add the public mouse-cortex Visium example with fixed checksum and CC BY 4.0
+  attribution. Existing labels and expression are exported, not recomputed.
+- Extend the runtime, package checks and CLI checks to four packages; leave
+  commfigR 0.2.0 and its release tag unchanged.
+
 ## Skill 2.3.0 / commfigR 0.2.0 / ncfigR 0.2.2
 
 - Add an existing-results communication task with canonical/CellChat table

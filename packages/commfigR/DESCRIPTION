@@ -1,6 +1,6 @@
 Package: commfigR
 Title: Cell-Cell Communication Figures from Existing Results
-Version: 0.2.0
+Version: 0.3.0
 Authors@R: person(given = "Jiang", family = "Congxin", role = c("aut", "cre"), email = "jcx981212@163.com")
 Author: Jiang Congxin
 Maintainer: Jiang Congxin <jcx981212@163.com>
@@ -11,7 +11,7 @@ Roxygen: list(markdown = TRUE)
 Depends:
     R (>= 4.1.0)
 Imports:
-    ncfigR (>= 0.2.2),
+    ncfigR (>= 0.3.0),
     ggplot2,
     dplyr,
     readr,

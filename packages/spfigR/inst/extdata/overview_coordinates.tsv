@@ -1,0 +1,9 @@
+section_id	spot_id	x	y	domain
+S1	001	0	0	Core
+S1	002	1	0	Core
+S1	003	0	1	Edge
+S1	004	1	1	Edge
+S2	001	0	0	Core
+S2	002	1	0	Stroma
+S2	003	0	1	Stroma
+S2	004	1	1	Stroma

@@ -1,6 +1,6 @@
 Package: scfigR
 Title: NC-Style Single-Cell Figure Toolkit
-Version: 0.3.1
+Version: 0.4.0
 Authors@R: person(given = "Jiang", family = "Congxin", role = c("aut", "cre"), email = "jcx981212@163.com")
 Author: Jiang Congxin
 Maintainer: Jiang Congxin <jcx981212@163.com>
@@ -12,10 +12,9 @@ RoxygenNote: 7.3.2
 Depends:
     R (>= 4.1.0)
 Imports:
-    ncfigR (>= 0.2.1),
+    ncfigR (>= 0.3.0),
     dplyr,
     readr,
-    grDevices,
     stats,
     grid,
     patchwork,

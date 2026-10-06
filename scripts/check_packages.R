@@ -8,12 +8,12 @@ args <- commandArgs(trailingOnly = TRUE)
 root <- normalizePath(if (length(args)) args[1] else ".", mustWork = TRUE)
 library_dir <- tempfile("ncfig-check-library-")
 dir.create(library_dir)
-.libPaths(c(library_dir, .libPaths()))
+.libPaths(c(library_dir, file.path(root, ".r-library"), .libPaths()))
 Sys.setenv(R_LIBS = paste(.libPaths(), collapse = .Platform$path.sep),
            `_R_CHECK_FORCE_SUGGESTS_` = "false")
-for (pkg in c("ncfigR", "scfigR", "commfigR")) {
+for (pkg in c("ncfigR", "scfigR", "commfigR", "spfigR", "trajfigR", "benchfigR", "multiomfigR")) {
   path <- file.path(root, "packages", pkg)
   utils::install.packages(path, repos = NULL, type = "source", lib = library_dir)
   rcmdcheck::rcmdcheck(path, args = "--no-manual", error_on = "warning")
 }
-message("All three task-runtime packages passed checks, including examples, tests, and vignettes.")
+message("All seven plotting packages passed checks, including examples, tests, and vignettes.")

@@ -1,6 +1,6 @@
 # Optional Other Plotting Domains
 
-Load only when the user requests spatial, trajectory, benchmark, multi-omics, genome-track, or additional non-atlas visualization. These domains are outside the stable single_cell_atlas runner. For the supported communication_overview task use communication_execution.md instead. Do not send communication tables to run_sc_job.R.
+Load only when the user requests additional spatial panels, trajectory, benchmark, multi-omics, genome-track, or additional non-atlas visualization. These domains are outside the stable single_cell_atlas runner. For supported communication_overview and spatial_overview tasks use communication_execution.md and spatial_execution.md instead. Do not send their tables to run_sc_job.R.
 
 Read only the matching domain API and source-data contract. Verify package availability, exported functions, implementation and tests before calling anything. Historical MVP routing below describes candidate capabilities, not equivalent validation or a supported execution/review loop. Report unsupported panels clearly; do not imply that an image overlay, velocity analysis, or statistical test is implemented from a template alone.
 
@@ -33,9 +33,9 @@ Return:
 Routing defaults:
 
 - single-cell atlas, UMAP, marker dotplot, composition, module score -> `scfigR` prototype; verify actual functions and tests, `ncfigR` shared base/fallback
-- spatial tissue map, domain, spatial feature, zoom, niche composition -> `spfigR` prototype; verify actual functions and tests, `ncfigR` shared base/fallback
+- Existing section-aware spatial overview -> `spfigR` 0.2.2 task; read `spatial_execution.md`. Other direct spatial APIs have separate contracts.
 - histology image overlay / segmentation mask overlay -> `spfigR` package target, image-specific overlay still `stub needed`
-- Existing communication overview -> `commfigR` 0.2.0 task; read `communication_execution.md`. Differential communication is a separate direct API and needs confirmed upstream statistics.
+- Existing communication overview -> `commfigR` 0.3.0 task; read `communication_execution.md`. Differential communication is a separate direct API and needs confirmed upstream statistics.
 - pseudotime, velocity, branch, gene trend, state transition -> `trajfigR` prototype; verify actual functions and tests, `ncfigR` shared base/fallback
 - method benchmark, rank plot, runtime/memory, robustness, biological case panel -> `benchfigR` prototype; verify actual functions and tests, `ncfigR` shared base/fallback
 - multi-omics integration, cross-dataset validation, regulatory/feature links, pathway/program panel -> `multiomfigR` prototype; verify actual functions and tests, `ncfigR` shared base/fallback

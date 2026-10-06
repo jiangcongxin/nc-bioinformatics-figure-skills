@@ -1,25 +1,30 @@
 Package: spfigR
-Title: NC-Style Spatial Omics Figure Toolkit
-Version: 0.1.0
+Title: Spatial Figures from Existing Results
+Version: 0.2.2
 Authors@R: person(given = "Jiang", family = "Congxin", role = c("aut", "cre"), email = "jcx981212@163.com")
 Author: Jiang Congxin
 Maintainer: Jiang Congxin <jcx981212@163.com>
-Description: R toolkit for training and generating NC-style spatial tissue niche figures from traceable source-data tables. It builds on ncfigR for shared theme, palette, composition, and export conventions.
+Description: Draw annotated spatial maps and feature maps from exported results. Checks section-specific coordinates, spot-feature coverage and zoom regions, and exports figures with source data, methods and reproducible task reports.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
 Depends:
     R (>= 4.1.0)
 Imports:
-    ncfigR,
+    ncfigR (>= 0.3.0),
     ggplot2,
+    readr,
+    jsonlite,
+    patchwork,
+    cowplot (>= 1.1.0),
+    scico (>= 1.5.0),
     scales,
     rlang
 Suggests:
-    readr,
+    CellChat,
     testthat (>= 3.0.0),
     knitr,
     rmarkdown
 Config/testthat/edition: 3
 VignetteBuilder: knitr
+Config/roxygen2/version: 8.0.0

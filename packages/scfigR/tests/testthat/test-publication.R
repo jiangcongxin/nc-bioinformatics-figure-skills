@@ -46,3 +46,21 @@ test_that("publication layout rejects ambiguous feature maps and inconsistent co
   inputs$atlas$composition$n[1] <- 10
   expect_error(do.call(compose_sc_publication_figure, inputs$atlas), "counts and proportions")
 })
+
+test_that("styles change colors, not publication source values", {
+  inputs <- publication_inputs()
+  render <- function(style) do.call(compose_sc_publication_figure,
+    c(inputs$atlas, list(expression = inputs$expression, feature_genes = c("g1", "g2", "g3"),
+      color_style = style, data.out = TRUE)))
+  balanced <- render("balanced")
+  muted <- render("muted")
+  expect_equal(balanced$data$markers, muted$data$markers)
+  expect_equal(balanced$data$embedding, muted$data$embedding)
+  expect_equal(balanced$data$composition, muted$data$composition)
+  expect_false(identical(balanced$data$palette, muted$data$palette))
+  custom <- c(T = "#112233", B = "#445566")
+  figure <- do.call(compose_sc_publication_figure, c(inputs$atlas,
+    list(palette = custom, color_style = "vivid", data.out = TRUE)))
+  actual <- stats::setNames(figure$data$palette$color, figure$data$palette$cell_type)
+  expect_equal(actual[names(custom)], custom)
+})

@@ -18,7 +18,8 @@ publication_theme <- function() {
 }
 
 publication_map <- function(data, color_col, palette = NULL, limits = NULL,
-                            title = NULL, tag = NULL, labels = NULL) {
+                            title = NULL, tag = NULL, labels = NULL,
+                            color_style = "balanced", feature_palette = NULL) {
   x_span <- diff(range(data$x)); y_span <- diff(range(data$y))
   if (x_span == 0 || y_span == 0) stop("publication maps require non-zero coordinate ranges.", call. = FALSE)
   x_origin <- min(data$x) - x_span * .02
@@ -33,8 +34,10 @@ publication_map <- function(data, color_col, palette = NULL, limits = NULL,
       axis.line = ggplot2::element_blank(), axis.text = ggplot2::element_blank(),
       axis.ticks = ggplot2::element_blank())
   if (is.null(palette)) {
-    p <- p + ggplot2::scale_colour_gradientn(
-      colours = c("#E5E5E5", "#D1B7DB", "#9670AF", "#57236B"), limits = limits,
+    background <- ggplot2::geom_point(ggplot2::aes(.data$x, .data$y), inherit.aes = FALSE,
+      size = point_size + .12, colour = "#C8CBCF", stroke = 0)
+    p$layers <- c(list(background), p$layers)
+    p <- p + ncfigR::nc_continuous_scale(color_style = color_style, feature_palette = feature_palette, limits = limits,
       name = "Log-normalized\nexpression", breaks = scales::breaks_pretty(n = 3)) +
       ggplot2::guides(colour = ggplot2::guide_colourbar(
         barheight = grid::unit(12, "mm"), barwidth = grid::unit(2, "mm")))
@@ -69,7 +72,8 @@ compose_sc_publication_figure <- function(embedding, composition, markers,
                                           palette = NULL, cell_type_order = NULL,
                                           feature_order = NULL,
                                           marker_scale = c("gene_zscore", "raw"),
-                                          title = NULL, marker_groups = NULL, data.out = FALSE) {
+                                          title = NULL, marker_groups = NULL, data.out = FALSE,
+                                          color_style = "balanced", feature_palette = NULL, marker_palette = NULL) {
   sc_check_data_out(data.out)
   marker_scale <- match.arg(marker_scale)
   grouped <- sc_group_markers(markers, "feature", feature_order, marker_groups)
@@ -80,13 +84,10 @@ compose_sc_publication_figure <- function(embedding, composition, markers,
     cell_type_order = cell_type_order, feature_order = feature_order)
   cell_types <- levels(sc_order(embedding$cell_type, cell_type_order, "cell_type_order"))
   features <- levels(sc_order(markers$feature, feature_order, "feature_order"))
-  if (is.null(palette)) palette <- stats::setNames(
-    if (length(cell_types) <= 12L) {
-      c("#5479A5", "#8BA9C7", "#477D72", "#A4B89B", "#B86F87", "#CCAA66",
-        "#A87850", "#8E7CA8", "#6E9FA8", "#A0A0A0", "#A9594E", "#668B9E")[seq_along(cell_types)]
-    } else grDevices::hcl.colors(length(cell_types), "Dark 3"), cell_types)
-  if (is.data.frame(palette)) palette <- ncfigR::read_nc_palette(palette)
-  ncfigR::validate_palette(cell_types, palette)
+  scheme <- ncfigR::nc_color_scheme(cell_types, color_style, palette = palette, feature_palette = feature_palette)
+  palette <- scheme$colors
+  marker_scheme <- ncfigR::nc_color_scheme(cell_types, color_style,
+    if (marker_scale == "gene_zscore") "signed_score" else "log_normalized", palette, marker_palette)
   ids <- stats::setNames(as.character(seq_along(cell_types)), cell_types)
   category_labels <- stats::setNames(paste(ids, cell_types), cell_types)
 
@@ -147,10 +148,10 @@ compose_sc_publication_figure <- function(embedding, composition, markers,
       direction = "horizontal", title.position = "top",
       barwidth = grid::unit(20, "mm"), barheight = grid::unit(2, "mm")))
   if (marker_scale == "gene_zscore") {
-    c <- c + ggplot2::scale_colour_gradient2(low = "#487CA8", mid = "#F1F1F1", high = "#A44769",
+    c <- c + ncfigR::nc_continuous_scale(color_style = color_style, signed = TRUE, feature_palette = marker_scheme$feature_palette,
       limits = c(-2, 2), oob = scales::squish, breaks = c(-2, 0, 2), name = "Mean expression (gene z-score)")
   } else {
-    c <- c + ggplot2::scale_colour_gradientn(colours = c("#E5E5E5", "#9670AF", "#57236B"),
+    c <- c + ncfigR::nc_continuous_scale(color_style = color_style, feature_palette = marker_scheme$feature_palette,
       name = "Mean expression")
   }
   if (!is.null(marker_groups)) c <- c +
@@ -179,7 +180,8 @@ compose_sc_publication_figure <- function(embedding, composition, markers,
       data <- embedding
       data$value <- values$value[match(data$cell_id, values$cell_id)]
       data <- data[order(data$value), , drop = FALSE]
-      publication_map(data, "value", limits = limits, title = feature_genes[i], tag = letters[i + 3L]) +
+      publication_map(data, "value", limits = limits, title = feature_genes[i], tag = letters[i + 3L],
+        color_style = color_style, feature_palette = scheme$feature_palette) +
         ggplot2::theme(plot.title = ggplot2::element_text(size = 7, face = "italic"))
     })
     # Keep marker guides local; collect only the identical feature-expression guide.
@@ -195,5 +197,6 @@ compose_sc_publication_figure <- function(embedding, composition, markers,
   figure <- figure + patchwork::plot_annotation(title = title, theme = publication_theme())
   if (data.out) list(plot = figure, data = list(embedding = embedding, composition = composition,
     markers = marker_data, expression = expression,
+    color_scheme = scheme, marker_scheme = marker_scheme,
     palette = data.frame(cell_type = names(palette), color = unname(palette)))) else figure
 }

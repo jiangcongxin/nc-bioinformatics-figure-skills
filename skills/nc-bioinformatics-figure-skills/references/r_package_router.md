@@ -8,13 +8,17 @@ Purpose: decide which local R plotting package should implement a user figure re
 |---|---|---|
 | `ncfigR` | shared theme, palette validation, source-data adapters, basic panels, composition, export bundle, QA manifest | implemented base / fallback |
 | `scfigR` | single-cell atlas figures: embedding, marker dotplot, composition, module score, annotation validation | implemented MVP for Atlas Overview |
-| `spfigR` | spatial figures: tissue maps, domain maps, spatial feature maps, zoom-in panels, and niche composition | implemented MVP for Spatial Tissue Niche |
-| `commfigR` | communication overview task plus direct LR/network/differential APIs | 0.2.0 checked overview task; direct APIs have separate scope |
+| `spfigR` | section-aware annotation/feature maps, ROI zooms, annotated spot fractions | 0.2.2 checked overview task; legacy direct APIs have separate contracts |
+| `commfigR` | communication overview task plus direct LR/network/differential APIs | 0.3.0 checked overview task; direct APIs have separate scope |
 | `trajfigR` | trajectory figures: pseudotime map, velocity arrows, branch probability, gene trends, state transition | implemented MVP for Trajectory |
 | `benchfigR` | benchmark figures: metric heatmap, rank plot, runtime/memory, robustness, biological case panel | implemented MVP for Benchmark + Biological Case |
 | `multiomfigR` | multi-omics figures: modality integration, cross-dataset validation, regulatory/feature links, pathway programs | implemented MVP for Multi-omics Integration |
 
 ## Routing Table
+
+For `spatial_overview`, first read `spatial_execution.md` and use the fixed
+task/review scripts. The historical panel rows below describe direct APIs, not
+the task's canonical section-aware contracts. Histology overlay remains a stub.
 
 | User Intent / Figure Template | Data Type | Primary Package | Target Function | Input Table | ncfigR Fallback |
 |---|---|---|---|---|---|

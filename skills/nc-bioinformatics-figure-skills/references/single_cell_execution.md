@@ -29,7 +29,7 @@ recorded, not fully frozen; font and platform differences still need inspection.
 3. Prepare the task JSON using `examples/single-cell/task-demo.json` as a structural example, not as scientific data. Paths are relative to the task JSON. Preserve explicit zero expression rows; all cell-feature pairs are required.
 4. Record user-approved biological parameters. The default detection threshold is zero; changes to thresholds, expression scale, annotations, input rows, or statistical design need user confirmation.
 
-scfigR 0.3.1 and ncfigR 0.2.1 add explicit layout and marker plot-data exports.
+scfigR 0.4.0 and ncfigR 0.2.1 add explicit layout and marker plot-data exports.
 Optional `figure.marker_groups` assigns all selected genes once to named display
 groups, with no additions or omissions. Keep names and ordering user-approved;
 never infer biological programs from a display group label. If `feature_order`

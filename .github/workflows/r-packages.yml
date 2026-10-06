@@ -28,7 +28,7 @@ jobs:
         with:
           working-directory: packages/ncfigR
           dependencies: '"hard"'
-          extra-packages: any::rcmdcheck, any::testthat, any::knitr, any::rmarkdown, any::SeuratObject, any::jsonlite
+          extra-packages: any::rcmdcheck, any::testthat, any::knitr, any::rmarkdown, any::SeuratObject, any::jsonlite, any::cowplot, any::colorspace, any::scico
           needs: check
       - name: Install shared toolkit and single-cell package
         shell: Rscript {0}
@@ -36,12 +36,16 @@ jobs:
           install.packages("packages/ncfigR", repos = NULL, type = "source")
           install.packages("packages/scfigR", repos = NULL, type = "source")
           install.packages("packages/commfigR", repos = NULL, type = "source")
+          install.packages("packages/spfigR", repos = NULL, type = "source")
+          install.packages("packages/trajfigR", repos = NULL, type = "source")
+          install.packages("packages/benchfigR", repos = NULL, type = "source")
+          install.packages("packages/multiomfigR", repos = NULL, type = "source")
       - name: Verify stable runtime versions
         run: Rscript scripts/check_runtime.R
       - name: Check packages including vignettes
         shell: Rscript {0}
         run: |
-          for (pkg in c("ncfigR", "scfigR", "commfigR")) {
+          for (pkg in c("ncfigR", "scfigR", "commfigR", "spfigR", "trajfigR", "benchfigR", "multiomfigR")) {
             rcmdcheck::rcmdcheck(file.path("packages", pkg), args = "--no-manual", error_on = "warning")
           }
       - name: Render example bundle
@@ -50,6 +54,8 @@ jobs:
         run: Rscript scripts/test_sc_job_cli.R
       - name: Exercise communication task and review gate
         run: Rscript scripts/test_comm_job_cli.R
+      - name: Exercise spatial task and review gate
+        run: Rscript scripts/test_sp_job_cli.R
       - uses: actions/upload-artifact@v4
         if: always()
         with:

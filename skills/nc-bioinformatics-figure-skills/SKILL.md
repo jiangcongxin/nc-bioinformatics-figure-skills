@@ -1,8 +1,8 @@
 ---
 name: nc-bioinformatics-figure-skills
-description: Plot and review existing single-cell results using ncfigR, scfigR and commfigR. Use for annotated embeddings, cell composition, marker expression, gene-expression maps, atlas figures or exported cell-cell communication results with traceable source data and checks. Focus on existing results, not raw-matrix analysis or general literature learning.
+description: Plot and review existing single-cell results using ncfigR, scfigR, commfigR and spfigR. Use for annotated embeddings, cell composition, marker expression, atlas figures, exported communication results or existing spatial maps with traceable source data and checks. Focus on existing results, not raw-matrix analysis or general literature learning.
 metadata:
-  version: "2.3.0"
+  version: "2.5.0"
 allowed-tools: Read, Write, Edit, Grep, Glob, WebSearch, Bash
 ---
 
@@ -26,6 +26,12 @@ use `run_comm_job.R` and `review_comm_job.R`, not the atlas runner. It preserves
 upstream inference and summarizes scores separately by condition. Differential
 panels remain direct APIs, outside this stable task.
 
+For existing spatial results, load only
+[the spatial execution protocol](references/spatial_execution.md).
+The `spatial_overview` task uses `run_sp_job.R` and `review_sp_job.R`: explicit
+sections, units and orientation, shared feature scales, ROI zooms and annotated
+spot fractions. Do not infer cell fractions, image alignment or biological niches.
+
 Do not run raw-matrix QC, normalization, clustering, annotation inference or
 differential expression under this workflow. Direct module-score or other panel
 functions require their documented inputs; they are not additional stable task
@@ -38,8 +44,8 @@ atlas execution. It defines input contracts, status handling, visual review,
 correction limits and frozen-input reproduction.
 
 1. Resolve the repository root containing the runtime scripts. Check the runtime
-   with `scripts/check_runtime.R`; respect `runtime-lock.tsv` (ncfigR 0.2.2,
-   scfigR 0.3.1 and commfigR 0.2.0). A skill-only installation is not a working R runtime. Stop with
+   with `scripts/check_runtime.R`; respect `runtime-lock.tsv` (ncfigR 0.3.0,
+   scfigR 0.4.0, commfigR 0.3.0 and spfigR 0.2.2). A skill-only installation is not a working R runtime. Stop with
    setup instructions if unavailable; do not install or change the lock silently.
 2. Inspect source headers and provenance. Confirm cell IDs, annotation/sample
    columns, selected genes, expression scale and intended descriptive claim.
@@ -48,6 +54,10 @@ correction limits and frozen-input reproduction.
 3. Prepare a task JSON without changing scientific inputs. Preserve explicit
    zero-expression rows. Display groups must contain the approved genes exactly
    once; they do not imply biological programs.
+   For styling requests, load [plotting base](references/plotting_base.md).
+   Select `figure.color_style`; retain explicit named palettes unless asked to
+   compare presets. Continuous palettes must match scale semantics. Freeze the
+   chosen colors and compare identical data, filters and figure dimensions.
 4. Invoke `scripts/run_sc_job.R --job <task.json>`. Capture its JSON result and
    exit status, and use the exact returned paths. Read reports, methods, source
    tables and marker plotting values before inspecting the figure.
@@ -79,8 +89,8 @@ Load only the module matching an explicit additional request:
   decisions, manuscript figure plans, plotting scaffolds or package design.
 - [Paper and code learning](references/optional_paper_code_learning.md): named
   papers/repos, source-code inspection, learning exercises or code mining.
-- [Other plotting domains](references/optional_other_domains.md): spatial,
-  trajectory, benchmarks, multi-omics and related visualizations.
+- [Other plotting domains](references/optional_other_domains.md): additional spatial
+  panels, trajectory, benchmarks, multi-omics and related visualizations.
   Verify implementations separately; the atlas task runner does not support them.
 
 These modules extend a requested task; they do not change the default single-cell

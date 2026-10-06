@@ -7,9 +7,13 @@ compose_sc_publication_figure(embedding, composition, markers,
   expression = NULL, feature_genes = NULL, palette = NULL,
   cell_type_order = NULL, feature_order = NULL,
   marker_scale = c("gene_zscore", "raw"), title = NULL,
-  marker_groups = NULL, data.out = FALSE)
+  marker_groups = NULL, data.out = FALSE, color_style = "balanced",
+  feature_palette = NULL, marker_palette = NULL)
 }
 \arguments{
+\item{color_style}{Coordinated balanced, muted, vivid or okabe_ito colors from ncfigR.}
+\item{feature_palette}{Optional sequential scico palette for feature maps.}
+\item{marker_palette}{Optional sequential palette for raw means or diverging palette for gene z-scores.}
 \item{embedding, composition, markers}{Atlas source tables with the same contracts as compose_sc_atlas_figure. Embedding must have cell_type; cell_id is required for expression maps.}
 \item{expression}{Optional complete long table of cell_id, feature, and non-negative log-normalized value. Zero values must be included.}
 \item{feature_genes}{Three distinct genes in expression, for panels d through f.}

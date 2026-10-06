@@ -2,7 +2,7 @@ plot_pseudotime_embedding_panel <- function(data, x_col = "x", y_col = "y",
                                             pseudotime_col = "pseudotime",
                                             state_col = NULL,
                                             point_size = 0.7, alpha = 0.85,
-                                            title = NULL) {
+                                            title = NULL, color_style = "balanced") {
   required <- c(x_col, y_col, pseudotime_col)
   if (!is.null(state_col)) {
     required <- c(required, state_col)
@@ -14,7 +14,7 @@ plot_pseudotime_embedding_panel <- function(data, x_col = "x", y_col = "y",
     ggplot2::aes(x = .data[[x_col]], y = .data[[y_col]], colour = .data[[pseudotime_col]])
   ) +
     ggplot2::geom_point(size = point_size, alpha = alpha, stroke = 0) +
-    ggplot2::scale_colour_viridis_c(option = "C", name = pseudotime_col) +
+    ncfigR::nc_continuous_scale(color_style = color_style, name = pseudotime_col) +
     ggplot2::coord_equal() +
     ggplot2::labs(title = title, x = NULL, y = NULL) +
     ncfigR::nc_theme() +
@@ -32,11 +32,11 @@ plot_velocity_embedding_panel <- function(data, x_col = "x", y_col = "y",
                                           palette = NULL,
                                           point_size = 0.45, arrow_alpha = 0.65,
                                           arrow_scale = 1,
-                                          title = NULL) {
+                                          title = NULL, color_style = "balanced") {
   check_traj_columns(data, c(x_col, y_col, dx_col, dy_col, state_col), "velocity vector data")
   palette <- as_named_palette(palette)
   if (is.null(palette)) {
-    palette <- default_traj_palette(data[[state_col]])
+    palette <- default_traj_palette(data[[state_col]], color_style)
   } else {
     ncfigR::validate_palette(data[[state_col]], palette)
   }
@@ -67,7 +67,7 @@ plot_branch_probability_panel <- function(data, pseudotime_col = "pseudotime",
                                           probability_col = "probability",
                                           group_col = NULL,
                                           palette = NULL,
-                                          title = NULL) {
+                                          title = NULL, color_style = "balanced") {
   required <- c(pseudotime_col, branch_col, probability_col)
   if (!is.null(group_col)) {
     required <- c(required, group_col)
@@ -75,7 +75,7 @@ plot_branch_probability_panel <- function(data, pseudotime_col = "pseudotime",
   check_traj_columns(data, required, "branch probability data")
   palette <- as_named_palette(palette)
   if (is.null(palette)) {
-    palette <- default_traj_palette(data[[branch_col]])
+    palette <- default_traj_palette(data[[branch_col]], color_style)
   } else {
     ncfigR::validate_palette(data[[branch_col]], palette)
   }
@@ -105,12 +105,17 @@ plot_branch_probability_panel <- function(data, pseudotime_col = "pseudotime",
 plot_gene_trend_panel <- function(data, pseudotime_col = "pseudotime",
                                   value_col = "value", feature_col = "feature",
                                   branch_col = NULL,
-                                  title = NULL) {
+                                  title = NULL, color_style = "balanced", palette = NULL) {
   required <- c(pseudotime_col, value_col, feature_col)
   if (!is.null(branch_col)) {
     required <- c(required, branch_col)
   }
   check_traj_columns(data, required, "gene trend data")
+  if (!is.null(branch_col)) {
+    palette <- as_named_palette(palette)
+    if (is.null(palette)) palette <- default_traj_palette(data[[branch_col]], color_style)
+    ncfigR::validate_palette(data[[branch_col]], palette)
+  }
   data <- data[order(data[[feature_col]], data[[pseudotime_col]]), , drop = FALSE]
   if (is.null(branch_col)) {
     p <- ggplot2::ggplot(
@@ -134,6 +139,7 @@ plot_gene_trend_panel <- function(data, pseudotime_col = "pseudotime",
       ggplot2::geom_line(linewidth = 0.6)
   }
 
+  if (!is.null(branch_col)) p <- p + ggplot2::scale_colour_manual(values = if (is.null(palette)) default_traj_palette(data[[branch_col]], color_style) else palette)
   p +
     ggplot2::facet_wrap(stats::as.formula(paste("~", feature_col)), scales = "free_y") +
     ggplot2::labs(title = title, x = pseudotime_col, y = value_col) +
@@ -144,7 +150,7 @@ plot_state_transition_panel <- function(data, from_col = "from_state",
                                         to_col = "to_state",
                                         weight_col = "weight",
                                         top_n = 30,
-                                        title = NULL) {
+                                        title = NULL, color_style = "balanced") {
   check_traj_columns(data, c(from_col, to_col, weight_col), "state transition data")
   ncfigR::plot_lr_network(
     data = data,
@@ -152,7 +158,7 @@ plot_state_transition_panel <- function(data, from_col = "from_state",
     target_col = to_col,
     value_col = weight_col,
     top_n = top_n,
-    title = title
+    title = title, color_style = color_style
   )
 }
 
@@ -161,29 +167,30 @@ compose_trajectory_figure <- function(trajectory_cells,
                                       gene_trends,
                                       state_transitions,
                                       velocity_vectors = NULL,
-                                      title = "Trajectory overview") {
+                                      title = "Trajectory overview", color_style = "balanced") {
+  branch_palette <- default_traj_palette(c(as.character(branch_probabilities$branch), as.character(gene_trends$branch)), color_style)
   p_pseudotime <- plot_pseudotime_embedding_panel(
     trajectory_cells,
-    title = "Pseudotime map"
+    title = "Pseudotime map", color_style = color_style
   )
   p_branch <- plot_branch_probability_panel(
     branch_probabilities,
-    title = "Branch probability"
+    title = "Branch probability", color_style = color_style, palette = branch_palette
   )
   p_gene <- plot_gene_trend_panel(
     gene_trends,
     branch_col = if ("branch" %in% names(gene_trends)) "branch" else NULL,
-    title = "Gene trend"
+    title = "Gene trend", color_style = color_style, palette = branch_palette
   )
   p_transition <- plot_state_transition_panel(
     state_transitions,
-    title = "State transition"
+    title = "State transition", color_style = color_style
   )
 
   panels <- list(p_pseudotime, p_branch, p_gene, p_transition)
   if (!is.null(velocity_vectors)) {
     panels <- c(
-      list(plot_velocity_embedding_panel(velocity_vectors, title = "Velocity / direction")),
+      list(plot_velocity_embedding_panel(velocity_vectors, title = "Velocity / direction", color_style = color_style)),
       panels
     )
   }

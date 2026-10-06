@@ -1,6 +1,6 @@
 plot_marker_heatmap <- function(data, row_col = "feature", col_col = "cell_type",
                                 value_col = "value", fill_limits = NULL,
-                                title = NULL) {
+                                title = NULL, color_style = "balanced") {
   validate_panel_data(data, c(row_col, col_col, value_col), value_col,
                       c(row_col, col_col), "marker heatmap data")
   ggplot2::ggplot(
@@ -8,21 +8,14 @@ plot_marker_heatmap <- function(data, row_col = "feature", col_col = "cell_type"
     ggplot2::aes(x = .data[[col_col]], y = .data[[row_col]], fill = .data[[value_col]])
   ) +
     ggplot2::geom_tile(colour = "white", linewidth = 0.15) +
-    ggplot2::scale_fill_gradient2(
-      low = "#3B4CC0",
-      mid = "white",
-      high = "#B40426",
-      midpoint = 0,
-      limits = fill_limits,
-      name = value_col
-    ) +
+    nc_continuous_scale("fill", color_style, signed = TRUE, limits = fill_limits, name = value_col) +
     ggplot2::labs(title = title, x = NULL, y = NULL) +
     nc_theme() +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
 }
 
 plot_lr_heatmap <- function(data, source_col = "source", target_col = "target",
-                            value_col = "score", title = NULL) {
+                            value_col = "score", title = NULL, color_style = "balanced") {
   check_columns(data, c(source_col, target_col, value_col), "ligand-receptor data")
   plot_data <- data |>
     dplyr::group_by(.data[[source_col]], .data[[target_col]]) |>
@@ -33,7 +26,7 @@ plot_lr_heatmap <- function(data, source_col = "source", target_col = "target",
     ggplot2::aes(x = .data[[target_col]], y = .data[[source_col]], fill = .data$score)
   ) +
     ggplot2::geom_tile(colour = "white", linewidth = 0.2) +
-    ggplot2::scale_fill_viridis_c(option = "C", name = value_col) +
+    nc_continuous_scale("fill", color_style, name = value_col) +
     ggplot2::labs(title = title, x = "receiver", y = "sender") +
     nc_theme() +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
@@ -41,7 +34,7 @@ plot_lr_heatmap <- function(data, source_col = "source", target_col = "target",
 
 plot_benchmark_heatmap <- function(data, method_col = "method", dataset_col = "dataset",
                                    value_col = "value", metric_col = NULL,
-                                   title = NULL) {
+                                   title = NULL, color_style = "balanced") {
   required <- c(method_col, dataset_col, value_col)
   if (!is.null(metric_col)) {
     required <- c(required, metric_col)
@@ -53,7 +46,7 @@ plot_benchmark_heatmap <- function(data, method_col = "method", dataset_col = "d
     ggplot2::aes(x = .data[[dataset_col]], y = .data[[method_col]], fill = .data[[value_col]])
   ) +
     ggplot2::geom_tile(colour = "white", linewidth = 0.2) +
-    ggplot2::scale_fill_viridis_c(option = "D", name = value_col) +
+    nc_continuous_scale("fill", color_style, name = value_col) +
     ggplot2::labs(title = title, x = NULL, y = NULL) +
     nc_theme() +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))

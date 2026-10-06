@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "task": "spatial_overview",
+  "job_id": "synthetic-spatial",
+  "inputs": {
+    "coordinates": "../../packages/spfigR/inst/extdata/overview_coordinates.tsv",
+    "features": "../../packages/spfigR/inst/extdata/overview_features.tsv",
+    "expression_scale": "log_normalized",
+    "coordinate_unit": "arbitrary",
+    "y_axis": "up",
+    "provenance": "Synthetic spatial demonstration with repeated barcodes across separate sections; not biological evidence"
+  },
+  "figure": {"width_mm": 183, "height_mm": 190, "point_size": 2},
+  "output_dir": "job-runs"
+}

@@ -12,6 +12,7 @@
 R functions for drawing traceable cell-cell communication figures from existing results.
 }
 \arguments{
+\item{color_style}{Coordinated style: balanced, muted, vivid or okabe_ito.}
 \item{data}{A source-data data frame for one panel.}
 \item{source_col}{Sender/source cell type column.}
 \item{target_col}{Receiver/target cell type column.}
@@ -33,21 +34,21 @@ R functions for drawing traceable cell-cell communication figures from existing 
 \usage{
 plot_lr_heatmap_panel(data, source_col = "source", target_col = "target",
   value_col = "score", ligand_col = "ligand", receptor_col = "receptor",
-  condition_col = NULL, title = NULL)
+  condition_col = NULL, title = NULL, color_style = "balanced")
 
 plot_lr_network_panel(data, source_col = "source", target_col = "target",
-  value_col = "score", top_n = 30, title = NULL)
+  value_col = "score", top_n = 30, title = NULL, color_style = "balanced")
 
 plot_sender_receiver_score_panel(data, source_col = "source", target_col = "target",
   score_col = "score", score_type_col = "score_type", condition_col = NULL,
-  title = NULL)
+  title = NULL, color_style = "balanced")
 
 plot_differential_communication_panel(data, source_col = "source",
   target_col = "target", ligand_col = "ligand", receptor_col = "receptor",
-  logfc_col = "logFC", p_col = "p_adj", top_n = 20, title = NULL)
+  logfc_col = "logFC", p_col = "p_adj", top_n = 20, title = NULL, color_style = "balanced")
 
 compose_communication_figure(lr_pairs, communication_scores, differential_lr = NULL,
-  network_edges = NULL, title = "Cell-cell communication overview")
+  network_edges = NULL, title = "Cell-cell communication overview", color_style = "balanced")
 }
 \details{
 The package builds on \pkg{ncfigR} for shared theme, LR heatmap, network, composition, and export behavior.

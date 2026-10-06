@@ -21,7 +21,7 @@ as_named_palette <- function(palette) {
   palette
 }
 
-default_bench_palette <- function(values) {
+default_bench_palette <- function(values, color_style = "balanced") {
   levels <- sort(unique(as.character(values)))
-  stats::setNames(grDevices::hcl.colors(length(levels), "Dark 3"), levels)
+  ncfigR::nc_color_scheme(levels, color_style)$colors
 }

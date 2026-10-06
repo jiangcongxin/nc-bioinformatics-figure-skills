@@ -73,8 +73,8 @@ job_validate_spec <- function(spec) {
   figure <- spec$figure
   if (is.null(figure)) figure <- list(layout = "publication")
   job_object(figure, c("layout", "width_mm", "height_mm", "cell_type_order", "feature_order", "feature_genes",
-    "marker_scale", "marker_groups", "palette", "title"), name = "figure")
-  defaults <- list(layout = "publication", width_mm = 183, height_mm = 126, marker_scale = "gene_zscore")
+    "marker_scale", "marker_groups", "palette", "title", "color_style", "feature_palette", "marker_palette"), name = "figure")
+  defaults <- list(layout = "publication", width_mm = 183, height_mm = 126, marker_scale = "gene_zscore", color_style = "balanced")
   for (field in names(defaults)) if (is.null(figure[[field]])) figure[[field]] <- defaults[[field]]
   if (!figure$layout %in% c("publication", "standard") || length(figure$layout) != 1L ||
       !figure$marker_scale %in% c("gene_zscore", "raw") || length(figure$marker_scale) != 1L) {
@@ -98,6 +98,8 @@ job_validate_spec <- function(spec) {
   }
   if (!is.null(figure$title)) job_string(figure$title, "figure.title")
   if (!is.null(figure$palette)) job_string(figure$palette, "figure.palette")
+  for (field in c("color_style", "feature_palette", "marker_palette")) if (!is.null(figure[[field]])) job_string(figure[[field]], paste0("figure.", field))
+  if (figure$layout == "standard" && !is.null(figure$marker_palette)) job_abort("invalid_spec", "marker_palette is only supported in publication layout.", "Use feature_palette for standard raw marker colors.")
   if (!is.null(figure$feature_genes) && (figure$layout != "publication" ||
       length(figure$feature_genes) != 3L || spec$inputs$expression_scale != "log_normalized")) {
     job_abort("invalid_feature_maps", "Three feature genes require publication layout and confirmed log_normalized expression.",
@@ -195,16 +197,18 @@ run_sc_job <- function(spec_path, output_dir = NULL) {
     if (length(samples) == 1L) add_check("sample_replication", "note", "One sample: no donor-level comparison or population inference.")
     rare <- names(which(table(embedding$cell_type) < 20))
     if (length(rare)) add_check("small_categories", "note", paste("Fewer than 20 cells; review descriptive marker stability:", paste(rare, collapse = ", ")))
-    palette <- if ("palette" %in% names(input_paths)) ncfigR::read_nc_palette(input_paths[["palette"]]) else stats::setNames(
-      if (length(types) <= 12L) c("#5479A5", "#8BA9C7", "#477D72", "#A4B89B", "#B86F87", "#CCAA66",
-        "#A87850", "#8E7CA8", "#6E9FA8", "#A0A0A0", "#A9594E", "#668B9E")[seq_along(types)] else grDevices::hcl.colors(length(types), "Dark 3"), types)
-    ncfigR::validate_palette(types, palette)
+    supplied_palette <- if ("palette" %in% names(input_paths)) ncfigR::read_nc_palette(readr::read_tsv(input_paths[["palette"]],
+      col_types = readr::cols(.default = readr::col_character()))) else NULL
+    scheme <- ncfigR::nc_color_scheme(types, spec$figure$color_style, palette = supplied_palette, feature_palette = spec$figure$feature_palette)
+    palette <- scheme$colors
     report$stage <- "figure"
     arguments <- list(embedding = data$embedding, composition = data$composition, markers = data$markers,
       palette = palette, cell_type_order = spec$figure$cell_type_order, feature_order = spec$figure$feature_order,
-      marker_groups = spec$figure$marker_groups, data.out = TRUE, title = spec$figure$title)
+      marker_groups = spec$figure$marker_groups, data.out = TRUE, title = spec$figure$title,
+      color_style = spec$figure$color_style, feature_palette = scheme$feature_palette)
     if (spec$figure$layout == "publication") {
       arguments$marker_scale <- spec$figure$marker_scale
+      arguments$marker_palette <- spec$figure$marker_palette
       if (!is.null(spec$figure$feature_genes)) {
         arguments$expression <- expression
         arguments$feature_genes <- spec$figure$feature_genes
@@ -216,6 +220,10 @@ run_sc_job <- function(spec_path, output_dir = NULL) {
     add_check("plot_build", "pass", "All panels and guides built; semantic visual review still required.")
     source_dir <- file.path(run_dir, "source-data")
     dir.create(source_dir)
+    readr::write_tsv(scheme$preview, file.path(source_dir, "color-preview.tsv"))
+    readr::write_tsv(scheme$feature_colors, file.path(source_dir, "feature-colors.tsv"))
+    if (!is.null(plotted$data$marker_scheme)) readr::write_tsv(plotted$data$marker_scheme$feature_colors, file.path(source_dir, "marker-colors.tsv"))
+    if (!file.copy(system.file("COLOR_ATTRIBUTION.md", package = "ncfigR"), file.path(source_dir, "COLOR_ATTRIBUTION.md"))) stop("Cannot freeze color attribution.")
     for (name in names(data)) readr::write_tsv(data[[name]], file.path(source_dir, paste0(name, ".tsv")))
     readr::write_tsv(plotted$data$markers, file.path(source_dir, "marker-plot-data.tsv"))
     readr::write_tsv(expression, file.path(source_dir, "expression.tsv"))
@@ -236,6 +244,8 @@ run_sc_job <- function(spec_path, output_dir = NULL) {
     resolved$inputs$expression <- "source-data/expression.tsv"
     resolved$output_dir <- "reproductions"
     resolved$figure$palette <- "source-data/palette.tsv"
+    resolved$figure$feature_palette <- scheme$feature_palette
+    if (!is.null(plotted$data$marker_scheme)) resolved$figure$marker_palette <- plotted$data$marker_scheme$feature_palette
     for (field in c("cell_type_order", "feature_order", "feature_genes")) {
       if (!is.null(resolved$figure[[field]])) resolved$figure[[field]] <- as.list(resolved$figure[[field]])
     }
@@ -243,6 +253,8 @@ run_sc_job <- function(spec_path, output_dir = NULL) {
       lapply(resolved$figure$marker_groups, as.list)
     job_json(resolved, file.path(run_dir, "resolved_job.json"))
     methods <- c("# Methods record", "", paste("Source:", spec$inputs$provenance),
+      paste("Color style:", scheme$style, "feature palette:", scheme$feature_palette),
+      "Colors and CVD previews are frozen in source-data. Scientific Colour Maps: Fabio Crameri, CC BY 4.0, https://doi.org/10.5281/zenodo.1243909; sampled through scico. See COLOR_ATTRIBUTION.md.",
       paste("Cells:", nrow(embedding), "Samples:", length(samples)),
       paste("Expression scale:", spec$inputs$expression_scale),
       paste("Detection: supplied expression >", spec$analysis$detection_threshold),
@@ -262,7 +274,9 @@ run_sc_job <- function(spec_path, output_dir = NULL) {
       "quit(status = result$exit_code)"), file.path(run_dir, "reproduce.R"))
     report$artifacts <- lapply(paths, function(path) substring(normalizePath(path, winslash = "/"), nchar(run_dir) + 2L))
     report$figure <- list(layout = spec$figure$layout, width_mm = spec$figure$width_mm,
-      height_mm = spec$figure$height_mm, marker_scale = if (spec$figure$layout == "publication") spec$figure$marker_scale else "raw")
+      height_mm = spec$figure$height_mm, marker_scale = if (spec$figure$layout == "publication") spec$figure$marker_scale else "raw",
+      color_style = scheme$style, feature_palette = scheme$feature_palette,
+      marker_palette = if (!is.null(plotted$data$marker_scheme)) plotted$data$marker_scheme$feature_palette else NULL)
     report$status <- "needs_review"
     report$next_action <- "Inspect the exported PNG and vector artwork at final size; submit six evidence-backed visual checks through review_sc_job. Do not claim NC-level quality from technical checks alone."
   }, warning = function(w) {

@@ -1,6 +1,6 @@
 Package: ncfigR
 Title: NC-Style Bioinformatics Figure Toolkit
-Version: 0.2.2
+Version: 0.3.0
 Authors@R: person(given = "Jiang", family = "Congxin", role = c("aut", "cre"), email = "jcx981212@163.com")
 Author: Jiang Congxin
 Maintainer: Jiang Congxin <jcx981212@163.com>
@@ -11,6 +11,9 @@ Roxygen: list(markdown = TRUE)
 Depends:
     R (>= 4.1.0)
 Imports:
+    cowplot (>= 1.1.0),
+    colorspace (>= 2.1.0),
+    scico (>= 1.5.0),
     ggplot2 (>= 3.4.0),
     patchwork,
     dplyr,
@@ -29,7 +32,6 @@ Suggests:
     circlize,
     Seurat,
     SeuratObject,
-    cowplot,
     testthat (>= 3.0.0),
     knitr,
     rmarkdown

@@ -18,7 +18,8 @@ plot_pseudotime_embedding_panel(
   state_col = NULL,
   point_size = 0.7,
   alpha = 0.85,
-  title = NULL
+  title = NULL,
+  color_style = "balanced"
 )
 
 plot_velocity_embedding_panel(
@@ -32,7 +33,8 @@ plot_velocity_embedding_panel(
   point_size = 0.45,
   arrow_alpha = 0.65,
   arrow_scale = 1,
-  title = NULL
+  title = NULL,
+  color_style = "balanced"
 )
 
 plot_branch_probability_panel(
@@ -42,7 +44,8 @@ plot_branch_probability_panel(
   probability_col = "probability",
   group_col = NULL,
   palette = NULL,
-  title = NULL
+  title = NULL,
+  color_style = "balanced"
 )
 
 plot_gene_trend_panel(
@@ -51,7 +54,9 @@ plot_gene_trend_panel(
   value_col = "value",
   feature_col = "feature",
   branch_col = NULL,
-  title = NULL
+  title = NULL,
+  color_style = "balanced",
+  palette = NULL
 )
 
 plot_state_transition_panel(
@@ -60,7 +65,8 @@ plot_state_transition_panel(
   to_col = "to_state",
   weight_col = "weight",
   top_n = 30,
-  title = NULL
+  title = NULL,
+  color_style = "balanced"
 )
 
 compose_trajectory_figure(
@@ -69,10 +75,12 @@ compose_trajectory_figure(
   gene_trends,
   state_transitions,
   velocity_vectors = NULL,
-  title = "Trajectory overview"
+  title = "Trajectory overview",
+  color_style = "balanced"
 )
 }
 \arguments{
+\item{color_style}{Coordinated style: balanced, muted, vivid or okabe_ito.}
 \item{data}{A data frame containing the required source-data columns for one panel.}
 \item{x_col, y_col}{Columns for embedding coordinates.}
 \item{pseudotime_col}{Column containing pseudotime values.}

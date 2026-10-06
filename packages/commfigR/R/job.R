@@ -53,8 +53,8 @@ comm_spec <- function(spec) {
   }
   figure <- spec$figure
   if (is.null(figure)) figure <- list(top_n = 12)
-  comm_object(figure, c("width_mm", "height_mm", "top_n", "max_pairs", "network_top_n", "cell_type_order", "title"), character(), "figure")
-  defaults <- list(width_mm = 183, height_mm = 220, top_n = 12, max_pairs = 16, network_top_n = 20)
+  comm_object(figure, c("width_mm", "height_mm", "top_n", "max_pairs", "network_top_n", "cell_type_order", "title", "color_style", "feature_palette", "palette", "condition_palette"), character(), "figure")
+  defaults <- list(width_mm = 183, height_mm = 220, top_n = 12, max_pairs = 16, network_top_n = 20, color_style = "balanced")
   for (name in names(defaults)) if (is.null(figure[[name]])) figure[[name]] <- defaults[[name]]
   for (name in c("width_mm", "height_mm")) {
     x <- figure[[name]]
@@ -84,6 +84,7 @@ comm_spec <- function(spec) {
     if (anyDuplicated(figure$cell_type_order)) comm_abort("invalid_spec", "Duplicate cell_type_order labels.")
   }
   if (!is.null(figure$title)) comm_string(figure$title, "figure.title")
+  for (name in c("color_style", "feature_palette", "palette", "condition_palette")) if (!is.null(figure[[name]])) comm_string(figure[[name]], paste0("figure.", name))
   if (!is.null(spec$output_dir)) comm_string(spec$output_dir, "output_dir")
   spec$figure <- figure
   spec$analysis <- analysis
@@ -144,6 +145,11 @@ run_comm_job <- function(spec_path, output_dir = NULL) {
     report$stage <- "input"
     path <- comm_path(spec$inputs$table, base)
     original_hash <- unname(tools::md5sum(path))
+    palette_paths <- lapply(spec$figure[intersect(c("palette", "condition_palette"), names(spec$figure))], comm_path, base = base)
+    palette_files <- as.character(unlist(palette_paths))
+    palette_hashes <- tools::md5sum(palette_files)
+    palettes <- lapply(palette_paths, function(x) ncfigR::read_nc_palette(readr::read_tsv(x,
+      col_types = readr::cols(.default = readr::col_character()))))
     data <- comm_read(path)
     if (spec$inputs$format == "cellchat") data <- as_cellchat_table(data, spec$inputs$condition)
     if (spec$inputs$format == "canonical" && !is.null(spec$inputs$condition)) {
@@ -154,7 +160,9 @@ run_comm_job <- function(spec_path, output_dir = NULL) {
     }
     plotted <- compose_communication_overview(data, p_max = spec$analysis$p_max, top_n = spec$figure$top_n,
       cell_type_order = spec$figure$cell_type_order, title = spec$figure$title,
-      data.out = TRUE, max_pairs = spec$figure$max_pairs, network_top_n = spec$figure$network_top_n)
+      data.out = TRUE, max_pairs = spec$figure$max_pairs, network_top_n = spec$figure$network_top_n,
+      color_style = spec$figure$color_style, feature_palette = spec$figure$feature_palette,
+      palette = palettes$palette, condition_palette = palettes$condition_palette)
     check("input_contracts", "pass", "Unique condition/sender/receiver/ligand/receptor keys; finite non-negative scores; p-values in [0,1].")
     check("condition_separation", "pass", "No pooling or averaging of conditions in edges, strength summaries or panels.")
     check("filtering", "pass", if (is.null(spec$analysis$p_max)) "No additional p-value filtering." else paste("Upstream p_value <=", spec$analysis$p_max))
@@ -171,8 +179,12 @@ run_comm_job <- function(spec_path, output_dir = NULL) {
     patchwork::patchworkGrob(plotted$plot)
     source_dir <- file.path(run_dir, "source-data")
     dir.create(source_dir)
-    for (name in c("input", "selected", "edges", "totals", "display", "rank", "pair_rank", "network_edges")) {
+    for (name in c("input", "selected", "edges", "totals", "display", "rank", "pair_rank", "network_edges", "palette", "condition_palette", "color_preview", "condition_color_preview", "feature_colors")) {
       readr::write_tsv(plotted$data[[name]], file.path(source_dir, paste0(name, ".tsv")))
+    }
+    if (!file.copy(system.file("COLOR_ATTRIBUTION.md", package = "ncfigR"), file.path(source_dir, "COLOR_ATTRIBUTION.md"))) stop("Cannot freeze color attribution.")
+    for (name in names(palette_paths)) {
+      if (!file.copy(palette_paths[[name]], file.path(source_dir, paste0("original-", name, ".tsv")))) stop("Cannot freeze palette input.")
     }
     if (!file.copy(path, file.path(source_dir, paste0("original.", tools::file_ext(path))))) stop("Cannot freeze original input.")
     manifest <- data.frame(path = path, md5 = original_hash, provenance = spec$inputs$provenance,
@@ -181,11 +193,15 @@ run_comm_job <- function(spec_path, output_dir = NULL) {
       width = spec$figure$width_mm / 25.4, height = spec$figure$height_mm / 25.4, source_manifest = manifest)
     if (any(!file.exists(unlist(paths))) || any(file.info(unlist(paths))$size <= 0)) stop("Empty export.")
     if (!identical(original_hash, unname(tools::md5sum(path)))) comm_abort("input_changed", "Input changed during execution; freeze and rerun.")
+    if (!identical(palette_hashes, tools::md5sum(palette_files))) comm_abort("input_changed", "Palette input changed during execution.")
     check("figure_exports", "pass", "Non-empty PNG/PDF/SVG and exact panel tables exported; visual quality still unchecked.")
     resolved <- spec
     resolved$inputs$table <- "source-data/input.tsv"
     resolved$inputs$format <- "canonical"
     resolved$inputs$condition <- NULL
+    resolved$figure$palette <- "source-data/palette.tsv"
+    resolved$figure$condition_palette <- "source-data/condition_palette.tsv"
+    resolved$figure$feature_palette <- plotted$data$color_scheme$feature_palette
     resolved$output_dir <- "reproductions"
     if (!is.null(resolved$figure$cell_type_order)) resolved$figure$cell_type_order <- as.list(resolved$figure$cell_type_order)
     comm_json(resolved, file.path(run_dir, "resolved_job.json"))
@@ -200,6 +216,9 @@ run_comm_job <- function(spec_path, output_dir = NULL) {
       "Missing pairs are absent, not inferred zeros. Fixed common score limits across conditions; no per-panel normalization.",
       "No differential statistics, donor-level inference or causal claims are generated. CellChat p-values are upstream model/permutation p-values, not adjusted donor-level evidence.",
       "Differences in cell composition, upstream settings and exported interaction coverage can change descriptive sums.",
+      paste("Color style:", spec$figure$color_style, "score palette:", plotted$data$color_scheme$feature_palette),
+      "Cell-type and condition colors use separate named palettes; conditions are not cell identities. Exact colors and CVD previews are frozen in source-data.",
+      "Scientific Colour Maps: Fabio Crameri, CC BY 4.0, https://doi.org/10.5281/zenodo.1243909; sampled through scico. See COLOR_ATTRIBUTION.md.",
       "See source-data/display.tsv, edges.tsv and totals.tsv for exact panel values."), file.path(run_dir, "methods.md"))
     writeLines(c("args <- commandArgs(trailingOnly = FALSE)",
       "script <- gsub('~+~', ' ', sub('^--file=', '', args[grepl('^--file=', args)][1]), fixed = TRUE)",
@@ -207,7 +226,8 @@ run_comm_job <- function(spec_path, output_dir = NULL) {
       "cat(jsonlite::toJSON(result, auto_unbox = TRUE), '\\n')", "quit(status = result$exit_code)"), file.path(run_dir, "reproduce.R"))
     report$artifacts <- lapply(paths, function(x) substring(normalizePath(x, winslash = "/"), nchar(run_dir) + 2L))
     report$figure <- list(width_mm = spec$figure$width_mm, height_mm = spec$figure$height_mm,
-      top_n = spec$figure$top_n, max_pairs = spec$figure$max_pairs, network_top_n = spec$figure$network_top_n)
+      top_n = spec$figure$top_n, max_pairs = spec$figure$max_pairs, network_top_n = spec$figure$network_top_n,
+      color_style = spec$figure$color_style, feature_palette = plotted$data$color_scheme$feature_palette)
     report$status <- "needs_review"
     report$stage <- "visual_review"
     report$next_action <- "Inspect PNG and PDF/SVG at final size. Submit six evidence-backed checks through review_comm_job; never infer publication quality from rendering success."

@@ -1,6 +1,6 @@
 # commfigR API
 
-`commfigR` 0.2.0 draws existing communication results. The supported Agent task
+`commfigR` 0.3.0 draws existing communication results. The supported Agent task
 is `communication_overview`; read [communication_execution.md](communication_execution.md).
 Other companion packages remain prototypes, not equivalent task engines.
 
@@ -101,7 +101,7 @@ T cell	Myeloid	0.82	activation
 
 ## Current Boundaries
 
-- `commfigR` v0.2.0 supports the overview task. Differential panels are direct
+- `commfigR` v0.3.0 supports the overview task. Differential panels are direct
   APIs requiring confirmed upstream statistics, not a supported task engine.
 - LR heatmaps preserve LR identities and condition facets. Network panels
   require one condition and sum supplied rows per sender/receiver; the legacy

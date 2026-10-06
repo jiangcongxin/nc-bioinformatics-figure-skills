@@ -7,17 +7,31 @@
 #' @param network_top_n Display-only top sender-receiver edges per condition.
 #' @param title Optional figure title.
 #' @param data.out Return the plot and exact panel tables if TRUE.
+#' @param color_style Coordinated color style.
+#' @param feature_palette Optional sequential scico score palette.
+#' @param palette Optional named cell-type colors.
+#' @param condition_palette Optional named condition colors, separate from cell types.
 #' @return A patchwork plot, or list(plot, data) when data.out is TRUE.
 #' @export
 compose_communication_overview <- function(data, p_max = NULL, top_n = 12,
                                            cell_type_order = NULL, title = NULL,
-                                           data.out = FALSE, max_pairs = 16, network_top_n = 20) {
+                                           data.out = FALSE, max_pairs = 16, network_top_n = 20,
+                                           color_style = "balanced", feature_palette = NULL,
+                                           palette = NULL, condition_palette = NULL) {
   if (!is.logical(data.out) || length(data.out) != 1L || is.na(data.out)) stop("data.out must be TRUE or FALSE.")
   prepared <- prepare_communication_data(data, p_max, top_n, cell_type_order, max_pairs)
   top_by_abs(prepared$edges, "score", network_top_n)
   if (is.null(network_top_n) || network_top_n > 100) stop("network_top_n must be between 1 and 100.")
   edges <- prepared$edges
   display <- prepared$display
+  scheme <- ncfigR::nc_color_scheme(prepared$cell_types, color_style, palette = palette, feature_palette = feature_palette)
+  conditions <- ncfigR::nc_color_scheme(prepared$conditions, color_style, palette = condition_palette)
+  prepared$palette <- data.frame(cell_type = names(scheme$colors), color = unname(scheme$colors))
+  prepared$condition_palette <- data.frame(condition = names(conditions$colors), color = unname(conditions$colors))
+  prepared$color_preview <- scheme$preview
+  prepared$condition_color_preview <- conditions$preview
+  prepared$feature_colors <- scheme$feature_colors
+  prepared$color_scheme <- scheme
   theme <- ncfigR::nc_theme(base_size = 8) + ggplot2::theme(
     strip.background = ggplot2::element_blank(),
     strip.text = ggplot2::element_text(face = "bold"), legend.position = "bottom")
@@ -25,21 +39,21 @@ compose_communication_overview <- function(data, p_max = NULL, top_n = 12,
   if (limits[2] == 0) limits[2] <- 1
   heat <- ggplot2::ggplot(edges, ggplot2::aes(.data$target, .data$source, fill = .data$score)) +
     ggplot2::geom_tile(colour = "white", linewidth = 0.2) +
-    ggplot2::scale_fill_viridis_c(option = "D", limits = c(0, max(1e-12, edges$score)), name = "Score sum") +
+    ncfigR::nc_continuous_scale("fill", color_style, feature_palette = scheme$feature_palette, limits = c(0, max(1e-12, edges$score)), name = "Score sum") +
     ggplot2::facet_wrap(~condition, nrow = 1) +
     ggplot2::scale_x_discrete(drop = FALSE) + ggplot2::scale_y_discrete(drop = FALSE) +
     ggplot2::labs(title = "Sender-receiver strength", x = "Receiver", y = "Sender") + theme +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 60, hjust = 1))
   dots <- ggplot2::ggplot(display, ggplot2::aes(.data$cell_pair, .data$lr_pair, colour = .data$score)) +
     ggplot2::geom_point(size = 1.7) +
-    ggplot2::scale_colour_viridis_c(option = "D", limits = limits, name = "Upstream score") +
+    ncfigR::nc_continuous_scale(color_style = color_style, feature_palette = scheme$feature_palette, limits = limits, name = "Upstream score") +
     ggplot2::facet_wrap(~condition, nrow = 1) +
     ggplot2::scale_x_discrete(drop = FALSE) + ggplot2::scale_y_discrete(drop = TRUE) +
     ggplot2::labs(title = "Selected ligand-receptor pairs", x = NULL, y = NULL) + theme +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, size = 5))
   totals <- ggplot2::ggplot(prepared$totals, ggplot2::aes(.data$score, .data$cell_type, fill = .data$condition)) +
     ggplot2::geom_col(position = "dodge", width = 0.7) + ggplot2::facet_wrap(~direction, nrow = 1) +
-    ggplot2::scale_fill_manual(values = stats::setNames(c("#5479A5", "#B86F87", "#477D72", "#CCAA66")[seq_along(prepared$conditions)], prepared$conditions)) +
+    ggplot2::scale_fill_manual(values = conditions$colors) +
     ggplot2::labs(title = "Incoming and outgoing strength", x = "Score sum", y = NULL, fill = "Condition") + theme
   network_data <- list()
   networks <- lapply(prepared$conditions, function(condition) {
@@ -57,7 +71,8 @@ compose_communication_overview <- function(data, p_max = NULL, top_n = 12,
       ggraph::geom_edge_loop(ggplot2::aes(width = .data$score), colour = "#82929B", alpha = 0.6,
         arrow = grid::arrow(length = grid::unit(1.2, "mm"))) +
       ggraph::scale_edge_width(range = c(0.15, 1.1), limits = c(0, max(1e-12, edges$score)), name = "Score sum") +
-      ggraph::geom_node_point(size = 2, colour = "#477D72") +
+      ggraph::geom_node_point(ggplot2::aes(colour = .data$name), size = 2) +
+      ggplot2::scale_colour_manual(values = scheme$colors, guide = "none") +
       ggraph::geom_node_text(ggplot2::aes(x = .data$x * 1.22, y = .data$y * 1.22,
         label = .data$name, hjust = ifelse(.data$x > 0.1, 0, ifelse(.data$x < -0.1, 1, 0.5))), size = 2.2) +
       ggplot2::labs(title = condition) + ggplot2::coord_equal(xlim = c(-1.75, 1.75), ylim = c(-1.6, 1.6), clip = "off") +

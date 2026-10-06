@@ -1,7 +1,8 @@
 nc_theme <- function(base_size = 8, base_family = "sans") {
-  ggplot2::theme_classic(base_size = base_size, base_family = base_family) +
+  cowplot::theme_half_open(font_size = base_size, font_family = base_family, line_size = 0.3) +
     ggplot2::theme(
       plot.title = ggplot2::element_text(face = "bold", size = base_size + 1),
+      plot.tag.position = "topleft",
       plot.subtitle = ggplot2::element_text(size = base_size),
       axis.title = ggplot2::element_text(size = base_size),
       axis.text = ggplot2::element_text(size = base_size - 1, colour = "black"),

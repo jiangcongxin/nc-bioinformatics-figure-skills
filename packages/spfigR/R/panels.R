@@ -4,6 +4,7 @@ plot_spatial_domain_panel <- function(data, domain_col = "domain",
                                       point_size = 0.8, alpha = 0.9,
                                       title = NULL) {
   check_sp_columns(data, c(x_col, y_col, domain_col), "spatial coordinate data")
+  sp_geometry(data, x_col, y_col, point_size, alpha)
   palette <- as_named_palette(palette)
   if (is.null(palette)) {
     palette <- default_sp_palette(data[[domain_col]])
@@ -33,6 +34,8 @@ plot_spatial_feature_panel <- function(data, value_col = "feature_value",
     required <- c(required, feature_col)
   }
   check_sp_columns(data, required, "spatial feature data")
+  sp_geometry(data, x_col, y_col, point_size, alpha)
+  sp_numeric(data, value_col)
 
   p <- ggplot2::ggplot(
     data,
@@ -78,6 +81,8 @@ plot_spatial_zoom_panel <- function(data, regions, region_id = NULL,
                                     title = NULL) {
   check_sp_columns(data, c(x_col, y_col, domain_col), "spatial coordinate data")
   check_sp_columns(regions, c("region_id", "xmin", "xmax", "ymin", "ymax"), "zoom region data")
+  sp_numeric(regions, c("xmin", "xmax", "ymin", "ymax"))
+  if (any(regions$xmin >= regions$xmax | regions$ymin >= regions$ymax)) stop("Zoom bounds must increase.", call. = FALSE)
 
   if (!is.null(region_id)) {
     regions <- regions[as.character(regions$region_id) %in% as.character(region_id), , drop = FALSE]

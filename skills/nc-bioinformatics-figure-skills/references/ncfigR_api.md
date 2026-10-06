@@ -1,6 +1,13 @@
 # ncfigR API
 
-Current package version: **0.2.1**. See the [single-cell guide](../../../examples/single-cell/README.md) for installation, input validation rules, and export behavior.
+Current package version: **0.3.0**. See the [single-cell guide](../../../examples/single-cell/README.md) for installation, input validation rules, and export behavior.
+
+`nc_color_styles()` lists the four presets. `nc_color_scheme(categories, style)`
+returns named colors, continuous stops and color-vision previews.
+`nc_continuous_scale(aesthetic, color_style, signed)` keeps numerical values
+unchanged; signed scales retain zero as their midpoint. Use named palettes to
+keep category identity across panels. Read [plotting base](plotting_base.md) for
+capacity, scale semantics and upstream attribution.
 
 `compose_nc_figure()` now also accepts positive numeric `widths`, `heights` and
 `guides = "auto" / "collect" / "keep"`. Use explicit designs for mixed panels;

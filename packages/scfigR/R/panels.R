@@ -1,6 +1,6 @@
 plot_sc_embedding_panel <- function(data, color_col = "cell_type", palette = NULL,
                                     point_size = 0.45, alpha = 0.85,
-                                    label = TRUE, title = NULL, cell_type_order = NULL) {
+                                    label = TRUE, title = NULL, cell_type_order = NULL, color_style = "balanced") {
   check_sc_columns(data, c("x", "y", color_col), "embedding data")
   ncfigR::plot_embedding_panel(
     data = data,
@@ -10,7 +10,7 @@ plot_sc_embedding_panel <- function(data, color_col = "cell_type", palette = NUL
     alpha = alpha,
     label = label,
     title = title,
-    category_order = cell_type_order
+    category_order = cell_type_order, color_style = color_style
   )
 }
 
@@ -19,7 +19,7 @@ plot_cell_fraction_panel <- function(data, group_col = "group",
                                      value_col = "proportion",
                                      palette = NULL,
                                      position = c("fill", "stack", "dodge"),
-                                     title = NULL, cell_type_order = NULL, group_order = NULL) {
+                                     title = NULL, cell_type_order = NULL, group_order = NULL, color_style = "balanced") {
   position <- match.arg(position)
   check_sc_columns(data, c(group_col, category_col, value_col), "cell fraction data")
   ncfigR::plot_composition_panel(
@@ -31,7 +31,7 @@ plot_cell_fraction_panel <- function(data, group_col = "group",
     position = position,
     title = title,
     category_order = cell_type_order,
-    group_order = group_order
+    group_order = group_order, color_style = color_style
   )
 }
 
@@ -41,7 +41,7 @@ plot_marker_dotplot_panel <- function(data, feature_col = "feature",
                                       percent_col = "pct_expression",
                                       expression_limits = NULL,
                                       title = NULL, cell_type_order = NULL, feature_order = NULL,
-                                      marker_groups = NULL, data.out = FALSE) {
+                                      marker_groups = NULL, data.out = FALSE, color_style = "balanced") {
   sc_check_data_out(data.out)
   ncfigR::validate_panel_data(
     data,
@@ -78,14 +78,8 @@ plot_marker_dotplot_panel <- function(data, feature_col = "feature",
       labels = scales::percent_format(accuracy = 1),
       name = percent_col
     ) +
-    ggplot2::scale_colour_gradient2(
-      low = "#3B4CC0",
-      mid = "white",
-      high = "#B40426",
-      midpoint = 0,
-      limits = expression_limits,
-      name = expression_col
-    ) +
+    ncfigR::nc_continuous_scale(color_style = color_style, signed = TRUE,
+      limits = expression_limits, name = expression_col) +
     ggplot2::labs(title = title, x = NULL, y = NULL) +
     ncfigR::nc_theme() +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
@@ -99,7 +93,7 @@ plot_module_score_panel <- function(data, score_col = "score",
                                     x_col = "x", y_col = "y",
                                     group_col = "group",
                                     facet_col = NULL,
-                                    title = NULL) {
+                                    title = NULL, color_style = "balanced") {
   mode <- match.arg(mode)
   required <- c(score_col)
   if (mode == "embedding") {
@@ -121,7 +115,7 @@ plot_module_score_panel <- function(data, score_col = "score",
       ggplot2::aes(x = .data[[x_col]], y = .data[[y_col]], colour = .data[[score_col]])
     ) +
       ggplot2::geom_point(size = 0.45, alpha = 0.85, stroke = 0) +
-      ggplot2::scale_colour_viridis_c(option = "C", name = score_col) +
+      ncfigR::nc_continuous_scale(color_style = color_style, signed = TRUE, name = score_col) +
       ggplot2::coord_equal() +
       ggplot2::labs(title = title, x = NULL, y = NULL) +
       ncfigR::nc_theme() +
@@ -133,6 +127,7 @@ plot_module_score_panel <- function(data, score_col = "score",
     ) +
       ggplot2::geom_violin(scale = "width", width = 0.85, alpha = 0.75, colour = NA) +
       ggplot2::geom_boxplot(width = 0.14, outlier.size = 0.2, alpha = 0.9) +
+      ggplot2::scale_fill_manual(values = ncfigR::nc_color_scheme(sort(unique(as.character(data[[group_col]]))), color_style)$colors) +
       ggplot2::labs(title = title, x = NULL, y = score_col) +
       ncfigR::nc_theme() +
       ggplot2::theme(legend.position = "none")
@@ -151,7 +146,8 @@ compose_sc_atlas_figure <- function(embedding, composition, markers,
                                     title = "Single-cell atlas overview",
                                     cell_type_order = NULL, feature_order = NULL,
                                     group_order = NULL, labels = "AUTO",
-                                    marker_groups = NULL, data.out = FALSE) {
+                                    marker_groups = NULL, data.out = FALSE,
+                                    color_style = "balanced", feature_palette = NULL) {
   sc_check_data_out(data.out)
   check_sc_columns(embedding, c("x", "y", embedding_color_col), "embedding data")
   check_sc_columns(composition, c("group", "cell_type", "proportion"), "composition data")
@@ -162,12 +158,8 @@ compose_sc_atlas_figure <- function(embedding, composition, markers,
       stop("embedding, composition, and markers must use the same cell-type categories.", call. = FALSE)
     }
   }
-  if (is.null(palette)) palette <- ncfigR::read_nc_palette(data.frame(
-    cell_type = cell_types,
-    color = if (length(cell_types) <= 8L) {
-      c("#0072B2", "#E69F00", "#009E73", "#CC79A7", "#56B4E9", "#D55E00", "#000000", "#F0E442")[seq_along(cell_types)]
-    } else grDevices::hcl.colors(length(cell_types), "Dark 3")
-  ))
+  scheme <- ncfigR::nc_color_scheme(cell_types, color_style, palette = palette, feature_palette = feature_palette)
+  palette <- scheme$colors
   p_embedding <- plot_sc_embedding_panel(
     embedding,
     color_col = embedding_color_col,
@@ -186,6 +178,9 @@ compose_sc_atlas_figure <- function(embedding, composition, markers,
   )
   marker_data <- p_markers$data
   p_markers <- p_markers$plot
+  p_markers$scales$scales <- Filter(function(x) !"colour" %in% x$aesthetics, p_markers$scales$scales)
+  p_markers <- p_markers + ncfigR::nc_continuous_scale(color_style = color_style,
+    feature_palette = scheme$feature_palette, name = "Mean expression")
   p_embedding <- p_embedding + ggplot2::theme(legend.position = "none")
   p_fraction <- p_fraction + ggplot2::labs(y = "Cell fraction") +
     ggplot2::guides(fill = ggplot2::guide_legend(title = "Cell type"))
@@ -197,12 +192,12 @@ compose_sc_atlas_figure <- function(embedding, composition, markers,
   if (!is.null(module_scores)) {
     panels <- c(
       panels,
-      list(plot_module_score_panel(module_scores, mode = "embedding", title = "Module score"))
+      list(plot_module_score_panel(module_scores, mode = "embedding", title = "Module score", color_style = color_style))
     )
   }
 
   figure <- ncfigR::compose_nc_figure(panels, ncol = 2, labels = labels, title = title,
     design = if (length(panels) == 3L) "AB\nCC" else NULL)
   if (data.out) list(plot = figure, data = list(embedding = embedding, composition = composition,
-    markers = marker_data, module_scores = module_scores, palette = palette)) else figure
+    markers = marker_data, module_scores = module_scores, palette = palette, color_scheme = scheme)) else figure
 }

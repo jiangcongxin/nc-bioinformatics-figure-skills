@@ -1,6 +1,6 @@
 plot_embedding_panel <- function(data, color_col = "cell_type", palette = NULL,
                                  point_size = 0.5, alpha = 0.85,
-                                 label = FALSE, title = NULL, category_order = NULL) {
+                                 label = FALSE, title = NULL, category_order = NULL, color_style = "balanced") {
   validate_panel_data(data, c("x", "y", color_col), c("x", "y"),
                       if ("cell_id" %in% names(data)) "cell_id" else character(), "embedding data")
   if (!is.numeric(point_size) || length(point_size) != 1L || !is.finite(point_size) || point_size <= 0 ||
@@ -10,7 +10,7 @@ plot_embedding_panel <- function(data, color_col = "cell_type", palette = NULL,
   data[[color_col]] <- ordered_values(data[[color_col]], category_order, "category_order")
   palette <- named_palette(palette)
   if (is.null(palette)) {
-    palette <- default_discrete_palette(data[[color_col]])
+    palette <- nc_color_scheme(levels(data[[color_col]]), color_style)$colors
   } else {
     validate_palette(data[[color_col]], palette)
   }
@@ -44,7 +44,7 @@ plot_composition_panel <- function(data, group_col = "group", category_col = "ce
                                    value_col = "proportion", palette = NULL,
                                    position = c("fill", "stack", "dodge"),
                                    title = NULL, category_order = NULL,
-                                   group_order = NULL, value_type = c("proportion", "count")) {
+                                   group_order = NULL, value_type = c("proportion", "count"), color_style = "balanced") {
   position <- match.arg(position)
   value_type <- match.arg(value_type)
   validate_panel_data(data, c(group_col, category_col, value_col), value_col,
@@ -62,7 +62,7 @@ plot_composition_panel <- function(data, group_col = "group", category_col = "ce
   data[[group_col]] <- ordered_values(data[[group_col]], group_order, "group_order")
   palette <- named_palette(palette)
   if (is.null(palette)) {
-    palette <- default_discrete_palette(data[[category_col]])
+    palette <- nc_color_scheme(levels(data[[category_col]]), color_style)$colors
   } else {
     validate_palette(data[[category_col]], palette)
   }

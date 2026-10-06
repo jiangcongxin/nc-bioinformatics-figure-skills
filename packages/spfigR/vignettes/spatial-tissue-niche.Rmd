@@ -1,8 +1,8 @@
 ---
-title: "Spatial Tissue Niche With spfigR"
+title: "Existing Spatial Results With spfigR"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Spatial Tissue Niche With spfigR}
+  %\VignetteIndexEntry{Existing Spatial Results With spfigR}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -11,6 +11,31 @@ vignette: >
 library(spfigR)
 library(ncfigR)
 ```
+
+## Section-aware overview
+
+Declare coordinate units, axis direction and expression scale. The synthetic
+example below contains repeated spot IDs in two sections and explicit zeros.
+Each section is plotted separately. Composition counts supplied spots, not cells.
+
+```{r overview, fig.width=7, fig.height=7}
+coordinates <- readr::read_tsv(system.file("extdata/overview_coordinates.tsv", package = "spfigR"),
+  col_types = readr::cols(spot_id = readr::col_character()))
+values <- readr::read_tsv(system.file("extdata/overview_features.tsv", package = "spfigR"),
+  col_types = readr::cols(spot_id = readr::col_character()))
+compose_spatial_overview(coordinates, values, expression_scale = "log_normalized",
+  coordinate_unit = "arbitrary", y_axis = "up", point_size = 2)
+```
+
+Use `run_sp_job()` for frozen inputs, export checks and a reviewable report.
+Technical success is `needs_review`; `review_sp_job()` records actual PNG and
+vector inspection. Neither entry point validates histology alignment or spatial
+association statistics.
+
+## Legacy direct panels
+
+These functions accept their own panel tables. Use the section-aware overview
+for multi-section tasks rather than merging coordinates into legacy panels.
 
 ```{r}
 coords <- readr::read_tsv(system.file("extdata/spatial_coordinates.tsv", package = "spfigR"), show_col_types = FALSE)
